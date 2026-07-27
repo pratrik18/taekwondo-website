@@ -1,3 +1,5 @@
+import os
+import json
 import time
 import gspread
 from datetime import datetime, timezone
@@ -5,10 +7,20 @@ from google.oauth2.service_account import Credentials
 
 import config
 
-creds = Credentials.from_service_account_file(
-    config.CREDENTIALS_FILE,
-    scopes=config.SCOPES,
-)
+_service_account_json = os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON")
+
+if _service_account_json:
+    creds_info = json.loads(_service_account_json)
+    creds = Credentials.from_service_account_info(
+        creds_info,
+        scopes=config.SCOPES,
+    )
+else:
+    creds = Credentials.from_service_account_file(
+        config.CREDENTIALS_FILE,
+        scopes=config.SCOPES,
+    )
+
 client = gspread.authorize(creds)
 
 book = client.open_by_key(config.SPREADSHEET_ID)
