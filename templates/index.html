@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pro Taekwon – Taekwon-Do Klub Senec</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='smooth.css') }}">
+
+  <!-- Fonty: Bungee (plagátový nadpisový font), Rye (vintage western pečiatky/eyebrows), Arvo (slab-serif text) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Rye&family=Arvo:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ===== PAGE LOADER ===== -->
+  <div id="page-loader">
+    <div class="loader-bar"></div>
+  </div>
+
+  <!-- ===== HEADER / NAV ===== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#home" class="logo-link">
+        <img src="{{ url_for('static', filename='images/logo.jpg') }}" alt="Pro Taekwon logo" class="logo-img" />
+      </a>
+      <nav class="main-nav">
+        <ul>
+          <li><a href="#home">Hlavná stránka</a></li>
+          <li><a href="#treningy">Tréningy</a></li>
+          <li><a href="#uspechy">Úspechy</a></li>
+          <li><a href="#kontakt">Kontakt</a></li>
+        </ul>
+      </nav>
+      <button class="burger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section id="home" class="hero">
+    <div class="hero-spotlight"></div>
+    <div class="hero-burst"></div>
+
+    <div class="punching-bag-wrap" id="punchingBag">
+      <div class="bag-chain"></div>
+      <div class="bag-body">
+        <div class="bag-band band-top"></div>
+        <div class="bag-highlight"></div>
+        <div class="bag-band band-bottom"></div>
+      </div>
+    </div>
+
+    <div class="hero-figure-wrap">
+      <img src="{{ url_for('static', filename='images/BCK.png') }}" class="hero-figure" alt="" />
+    </div>
+
+    <div class="container hero-content">
+      <p class="hero-eyebrow reveal">Taekwondo ITF · Senec</p>
+      <h1 class="reveal reveal-delay-1">Pro Taekwon</h1>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT US ===== -->
+  <section class="about">
+  <div class="container about-grid">
+    <div class="about-text reveal">
+      <p class="section-eyebrow">O klube</p>
+      <h2>Viac ako šport –<br/>spôsob života</h2>
+      <p>Pro Taekwon je senecký klub zasvätený ITF Taekwon-Do. Naším cieľom je vychovávať nielen skvelých bojovníkov, ale aj zodpovedných ľudí s pevným charakterom. Veríme, že hodnoty získané na tatami sprevádzajú cvičencov celým životom.</p>
+    </div>
+
+    <div class="about-image reveal reveal-delay-1">
+      <img src="{{ url_for('static', filename='images/plagat.jpg') }}" alt="Pro Taekwon plagát" />
+    </div>
+
+    <div class="about-stats reveal reveal-delay-2">
+      {% if zobrazitOnas1 %}
+      <div class="stat">
+        <span class="stat-num">{{ roky }}</span>
+        <span class="stat-label">Rokov skúseností</span>
+      </div>
+      {% endif %}
+      {% if zobrazitOnas2 %}
+      <div class="stat">
+        <span class="stat-num">{{ clenovia }}</span>
+        <span class="stat-label">Aktívnych členov</span>
+      </div>
+      {% endif %}
+      {% if zobrazitOnas3 %}
+      <div class="stat">
+        <span class="stat-num">{{ treningy }}</span>
+        <span class="stat-label">Tréningy týždenne</span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+  <!-- ===== TRAINING ===== -->
+  <section id="treningy" class="training">
+    <div class="container">
+      <p class="section-eyebrow light reveal">Tréningový program</p>
+      <h2 class="section-title light reveal reveal-delay-1">Tréningy</h2>
+
+      <div class="training-grid">
+
+  {% if zobrazit1 %}
+  <div class="training-card reveal">
+    <div class="card-accent">Kolo {{ c1 }}</div>
+    <h3>{{ nadpis1 }}</h3>
+    <p>{{ popis1 }}</p>
+    <ul class="schedule">
+      {% for den, cas in slots1 %}
+        {% if den and cas %}
+          <li><span class="day">{{ den }}</span><span class="time">{{ cas }}</span></li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+    <a href="#kontakt" class="btn btn-outline">Prihlásiť sa</a>
+  </div>
+  {% endif %}
+
+  {% if zobrazit2 %}
+  <div class="training-card reveal reveal-delay-1">
+    <div class="card-accent">Kolo {{ c2 }}</div>
+    <h3>{{ nadpis2 }}</h3>
+    <p>{{ popis2 }}</p>
+    <ul class="schedule">
+      {% for den, cas in slots2 %}
+        {% if den and cas %}
+          <li><span class="day">{{ den }}</span><span class="time">{{ cas }}</span></li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+    <a href="#kontakt" class="btn btn-outline">Prihlásiť sa</a>
+  </div>
+  {% endif %}
+
+  {% if zobrazit3 %}
+  <div class="training-card reveal reveal-delay-2">
+    <div class="card-accent">Kolo {{ c3 }}</div>
+    <h3>{{ nadpis3 }}</h3>
+    <p>{{ popis3 }}</p>
+    <ul class="schedule">
+      {% for den, cas in slots3 %}
+        {% if den and cas %}
+          <li><span class="day">{{ den }}</span><span class="time">{{ cas }}</span></li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+    <a href="#kontakt" class="btn btn-outline">Prihlásiť sa</a>
+  </div>
+  {% endif %}
+
+</div>
+
+      </div>
+
+      <div class="training-location reveal">
+        <div>
+          <strong>Miesto tréningu</strong>
+          <p>Telocvičňa ZŠ, Senec — presná adresa bude doplnená</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ACHIEVEMENTS ===== -->
+  <section id="uspechy" class="achievements">
+    <div class="container">
+      <p class="section-eyebrow reveal">Výsledky a ocenenia</p>
+      <h2 class="section-title reveal reveal-delay-1">Úspechy</h2>
+      <p class="section-intro reveal reveal-delay-2">Naši cvičenci pravidelne reprezentujú klub na regionálnych aj medzinárodných turnajoch. Tu je prehľad najvýznamnejších úspechov.</p>
+
+      <div class="achievements-grid">
+        <div class="achievement-item reveal">
+          <div>
+            <h4>Majstrovstvá Slovenska 2025</h4>
+            <p>Zlato v kategórii Cadets – formy aj sparring</p>
+          </div>
+        </div>
+        <div class="achievement-item reveal reveal-delay-1">
+          <div>
+            <h4>Stredoeurópsky pohár 2024</h4>
+            <p>Striebro v kategórii Juniors – sparring</p>
+          </div>
+        </div>
+        <div class="achievement-item reveal reveal-delay-2">
+          <div>
+            <h4>Otvorený turnaj Bratislava 2024</h4>
+            <p>Bronz v kategórii Seniors – pattern</p>
+          </div>
+        </div>
+        <div class="achievement-item reveal reveal-delay-3">
+          <div>
+            <h4>Regionálny pohár Západ 2025</h4>
+            <p>Zlaté medaily v 4 kategóriách</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section id="kontakt" class="contact">
+    <div class="container contact-inner">
+      <div class="contact-cta reveal reveal-delay-1">
+        <p class="section-eyebrow light reveal">Kontakt</p>
+        <h2 class="light form-heading">Napíš nám</h2>
+        <p class="form-subtext">Máš otázky alebo chceš vyskúšať prvý tréning zadarmo? Ozvi sa nám.</p>
+
+        <form id="contactForm" action="{{ url_for('submit') }}" method="POST">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="meno">Meno</label>
+              <input type="text" id="meno" name="meno" placeholder="Tvoje meno" required>
+              <span class="form-error" data-for="meno">Meno je povinné.</span>
+            </div>
+            <div class="form-group">
+              <label for="priezvisko">Priezvisko</label>
+              <input type="text" id="priezvisko" name="priezvisko" placeholder="Tvoje priezvisko" required>
+              <span class="form-error" data-for="priezvisko">Priezvisko je povinné.</span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">E-mail</label>
+              <input type="email" id="email" name="email" placeholder="tvoj@email.sk" required>
+              <span class="form-error" data-for="email">E-mail je povinný.</span>
+            </div>
+            <div class="form-group">
+              <label for="telefon">Telefón</label>
+              <input type="tel" id="telefon" name="telefon" placeholder="Tvoj telefón" required>
+              <span class="form-error" data-for="telefon">Telefón je povinný.</span>
+            </div>
+          </div>
+
+          <div class="form-group form-group-consent">
+            <label class="consent-label" for="suhlas">
+              <input type="checkbox" id="suhlas" name="suhlas" required>
+              <span class="consent-box" aria-hidden="true"></span>
+              <span class="consent-text">
+                Súhlasím so spracovaním mojich osobných údajov (meno, priezvisko, telefón, e-mail) za účelom vybavenia mojej žiadosti a kontaktovania mojou osobou.
+              </span>
+            </label>
+            <details class="consent-details">
+              <summary>Viac o spracovaní údajov</summary>
+              <p>
+                Vaše údaje spracúva Pro Taekwon Senec výhradne na účely odpovede na váš dopyt
+                a evidencie záujemcov o tréning. Údaje neposkytujeme tretím stranám na marketingové
+                účely a uchovávame ich len po nevyhnutnú dobu. Súhlas môžete kedykoľvek odvolať
+                e-mailom na [DOPLNIŤ KONTAKTNÝ E-MAIL]. V súlade s GDPR máte právo na prístup,
+                opravu, výmaz a prenosnosť svojich údajov.
+              </p>
+            </details>
+            <span class="form-error" data-for="suhlas">Pre odoslanie formulára je potrebný súhlas so spracovaním osobných údajov.</span>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-large">Odoslať</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <img src="{{ url_for('static', filename='images/footer.jpg') }}" alt="Pro Taekwon" class="footer-logo" />
+      <p class="footer-copy">&copy; 2026 Pro Taekwon Senec. Všetky práva vyhradené.</p>
+      <p class="footer-note">Aktivity klubu sú realizované s podporou mesta Senec.</p>
+    </div>
+  </footer>
+
+  <!-- ===== BELT SCROLLBAR ===== -->
+  <div id="belt-scrollbar">
+    <div id="belt-track">
+      <div id="belt-thumb">
+        <div class="belt-stripe stripe-top"></div>
+        <div class="belt-weave"></div>
+        <div class="belt-tip"></div>
+        <div class="belt-stripe stripe-bottom"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script>
+    // Prepínanie burger menu
+    const burger = document.querySelector('.burger');
+    const nav = document.querySelector('.main-nav');
+    burger.addEventListener('click', () => {
+      nav.classList.toggle('open');
+      burger.classList.toggle('active');
+    });
+
+    // Zatvorenie menu po kliknutí na odkaz
+    document.querySelectorAll('.main-nav a').forEach(link => {
+      link.addEventListener('click', () => {
+        nav.classList.remove('open');
+        burger.classList.remove('active');
+      });
+    });
+
+    // Zvýraznenie aktívnej sekcie v navigácii pri scrollovaní
+    const sections = document.querySelectorAll('section[id]');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(s => {
+        if (window.scrollY >= s.offsetTop - 80) current = s.getAttribute('id');
+      });
+      document.querySelectorAll('.main-nav a').forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+      });
+    });
+  </script>
+  <script src="{{ url_for('static', filename='smooth.js') }}"></script>
+
+</body>
+</html>

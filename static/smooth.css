@@ -1,0 +1,220 @@
+/* ── Page loader ─────────────────────────────────────────── */
+#page-loader {
+  position: fixed;
+  inset: 0;
+  background: var(--ink);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+#page-loader.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.loader-bar {
+  width: 140px;
+  height: 6px;
+  background: var(--white);
+  border: 3px solid var(--gold);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.loader-bar::after {
+  content: '';
+  display: block;
+  height: 100%;
+  background: var(--gold-dk);
+  animation: load-progress 0.8s ease forwards;
+}
+
+@keyframes load-progress {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+
+/* ── Scroll fade-in ──────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+
+/* ── Hero spotlight ──────────────────────────────────────── */
+.hero-spotlight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(
+    600px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(224, 165, 38, 0.10) 0%,
+    transparent 70%
+  );
+}
+
+/* Note: hero heading uses a flat "cel-shaded" comic style
+   (thick outline + hard offset shadow), defined in style.css.
+   Instead of a glossy highlight, it uses a subtle "rubber" bounce animation. */
+
+
+/* ── Cards ───────────────────────────────────────────────── */
+.training-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.achievement-item {
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+
+/* ── Navigation ─────────────────────────────────────────── */
+.main-nav a {
+  transition: color 0.3s ease !important;
+}
+
+.main-nav a::after {
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+
+/* ── Buttons ────────────────────────────────────────────── */
+.btn {
+  transition: background 0.2s ease, color 0.2s ease,
+              transform 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+
+/* ── Stat hover ──────────────────────────────────────────── */
+.stat {
+  transition: transform 0.2s ease;
+}
+
+.stat:hover {
+  transform: translate(-3px, -3px) rotate(0deg) !important;
+}
+
+
+/* ── Header scroll ───────────────────────────────────────── */
+.site-header {
+  transition: box-shadow 0.4s ease;
+}
+
+.site-header.scrolled {
+  box-shadow: 0 4px 0 var(--gold-dk);
+}
+
+
+/* ── Custom scrollbar in the shape of a belt ──────────────────── */
+html {
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
+#belt-scrollbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 22px;
+  height: 100vh;
+  z-index: 9998;
+  pointer-events: none;
+}
+
+#belt-track {
+  position: absolute;
+  inset: 0;
+  background: var(--ink);
+}
+
+#belt-thumb {
+  position: absolute;
+  left: 3px;
+  width: 16px;
+  border-radius: 3px;
+  background-color: var(--belt-color, #ffffff);
+  box-shadow: inset 0 0 0 2px var(--ink);
+  transition: background-color 0.35s ease;
+}
+
+.belt-weave {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.10) 0px,
+    rgba(0,0,0,0.10) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+}
+
+.belt-stitch.top {
+  top: 4px;
+}
+
+.belt-stitch.bottom {
+  bottom: 4px;
+}
+
+.belt-tip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 18%;
+  background: rgba(0,0,0,0.5);
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%);
+}
+
+.belt-stripe {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background-color: var(--stripe-color, transparent);
+  opacity: var(--stripe-opacity, 0);
+  transition: background-color 0.35s ease, opacity 0.35s ease;
+}
+
+.stripe-top {
+  top: 3px;
+}
+
+.stripe-bottom {
+  bottom: 3px;
+}
+
+
+@media (max-width: 640px) {
+  #belt-scrollbar {
+    width: 14px;
+  }
+
+  #belt-thumb {
+    left: 2px;
+    width: 10px;
+  }
+
+  .belt-stripe {
+    height: 4px;
+  }
+}
