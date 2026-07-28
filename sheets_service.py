@@ -158,5 +158,5 @@ def append_contact(meno, priezvisko, telefon, email):
     suhlas_udeleny_o = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
 
     new_id = _get_next_id()
-    database.append_row([new_id, meno, priezvisko, telefon, email])
+    database.append_row([new_id, meno, priezvisko, telefon, email, suhlas_udeleny_o])
     return True
