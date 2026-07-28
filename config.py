@@ -10,6 +10,6 @@ SCOPES = [
 
 CREDENTIALS_FILE = "credentials.json"
 SPREADSHEET_ID = os.environ.get("SPREADSHEET_ID")
-CACHE_TTL = 1
+CACHE_TTL = 30
 
 DEBUG = os.environ.get("DEBUG", "False") == "True"
