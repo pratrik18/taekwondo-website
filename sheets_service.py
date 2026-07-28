@@ -2,7 +2,8 @@ import os
 import json
 import time
 import gspread
-from datetime import datetime, timezone
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from google.oauth2.service_account import Credentials
 
 import config
@@ -155,7 +156,7 @@ def append_contact(meno, priezvisko, telefon, email):
     if contact_exists(email, telefon):
         return False
 
-    suhlas_udeleny_o = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+    suhlas_udeleny_o = datetime.now(ZoneInfo("Europe/Bratislava")).strftime("%Y-%m-%d %H:%M:%S")
 
     new_id = _get_next_id()
     database.append_row([new_id, meno, priezvisko, telefon, email, suhlas_udeleny_o])
