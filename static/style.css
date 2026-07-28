@@ -117,8 +117,10 @@ body::after {
   border-radius: 999px;
   transform: rotate(-2deg);
   box-shadow: 3px 3px 0 var(--ink);
+  position: relative;
+  z-index: 7;
 }
-.section-eyebrow.light { color: var(--gold); background: var(--ink); }
+.section-eyebrow.light { color: var(--gold); background: var(--ink); z-index: 7; position: relative; }
 
 .section-title {
   font-family: 'Bungee', cursive;
@@ -129,8 +131,10 @@ body::after {
   -webkit-text-stroke: 1.5px var(--ink);
   margin-bottom: 40px;
   letter-spacing: 1px;
+  z-index: 7;
+  position: relative;
 }
-.section-title.light { color: var(--gold); -webkit-text-stroke: 1.5px var(--ink); }
+.section-title.light { color: var(--gold); -webkit-text-stroke: 1.5px var(--ink); z-index: 7; position: relative; }
 
 /* ── COMIC PANEL (shared cel-shaded look) ─────────────────── */
 .stat,
@@ -320,6 +324,7 @@ body::after {
   z-index: 3;
   max-width: 620px;
   padding: 80px 24px;
+  z-index: 7;
 }
 .hero-slash { display: none; }
 
@@ -372,6 +377,7 @@ body::after {
   transform-origin: top center;
   will-change: transform;
   pointer-events: none;
+  z-index: 7;
 }
 .bag-chain {
   width: 5px;
@@ -447,11 +453,12 @@ body::after {
   margin-bottom: 20px;
   line-height: 1.15;
 }
-.about-text p { color: var(--muted); font-size: 16px; line-height: 1.8; }
+.about-text p { color: var(--ink); font-size: 16px; line-height: 1.8; }
 .about-stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 18px;
+  z-index: 7;
 }
 .stat {
   background: var(--white);
@@ -482,6 +489,7 @@ body::after {
 .about-image {
   position: relative;
   justify-self: center;
+  z-index: 7;
 }
 .about-image img {
   width: 100%;
@@ -511,6 +519,7 @@ body::after {
   flex-direction: column;
   gap: 16px;
   box-shadow: 7px 7px 0 var(--ink);
+  z-index: 7;
 }
 .training-card:hover { transform: translate(-3px,-3px); box-shadow: 10px 10px 0 var(--ink); }
 .card-accent {
@@ -594,6 +603,7 @@ body::after {
   border-radius: var(--radius);
   box-shadow: 6px 6px 0 var(--ink);
   position: relative;
+  z-index: 7;
 }
 .achievement-item:hover { transform: translate(-2px,-2px); box-shadow: 8px 8px 0 var(--ink); }
 .achievement-item h4 {
@@ -635,6 +645,7 @@ body::after {
   border-radius: 16px;
   padding: 48px;
   box-shadow: 8px 8px 0 var(--gold-dk);
+  z-index: 7;
 }
 .contact-cta::before,
 .contact-cta::after {

@@ -44,7 +44,12 @@
   transform: translateY(28px);
   transition: opacity 0.7s ease, transform 0.7s ease;
 }
-
+.about-text.reveal {
+  transform: none !important;
+}
+.about-text.reveal.visible {
+  transform: none !important;
+}
 .reveal.visible {
   opacity: 1;
   transform: translateY(0);
