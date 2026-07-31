@@ -159,8 +159,12 @@
 
       <div class="training-location reveal">
         <div>
-          <strong>Miesto tréningu</strong>
-          <p>Telocvičňa ZŠ, Senec — presná adresa bude doplnená</p>
+          {% if nazovInfo %}
+            <strong>{{ nazovInfo }}</strong>
+          {% endif %}
+          {% if popisInfo %}
+            <p>{{ popisInfo }}</p>
+          {% endif %}
         </div>
       </div>
     </div>

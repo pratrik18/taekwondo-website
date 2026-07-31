@@ -123,6 +123,9 @@ def get_landing_data():
             (get_cell(32, 4), get_cell(34, 4)),
         ],
 
+        'nazovInfo': get_cell(37, 2),
+        'popisInfo': get_cell(39, 2),
+
         "zobrazit1": stav1 != "Nezobraziť",
         "zobrazit2": stav2 != "Nezobraziť",
         "zobrazit3": stav3 != "Nezobraziť",
