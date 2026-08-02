@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pro Taekwon – Taekwon-Do Klub Senec</title>
+  <title>Pro Taekwon – Taekwon-Do Senec</title>
 
   <!-- Styles -->
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -65,11 +65,11 @@
     </div>
   </section>
 
-  <!-- ===== ABOUT US ===== -->
+   <!-- ===== ABOUT US ===== -->
   <section class="about">
   <div class="container about-grid">
     <div class="about-text reveal">
-      <p class="section-eyebrow">O klube</p>
+      <p class="section-eyebrow reveal">O klube</p>
       <h2>Viac ako šport<br/></h2>
       <p>Pro Taekwon je senecký klub zasvätený ITF Taekwon-Do. Naším cieľom je vychovávať nielen skvelých bojovníkov, ale aj zodpovedných ľudí s pevným charakterom. Veríme, že hodnoty získané na tatami sprevádzajú cvičencov celým životom.</p>
     </div>
@@ -93,6 +93,33 @@
         <span class="stat-label">Tréningy týždenne</span>
       </div>
       {% endif %}
+    </div>
+  </div>
+</section>
+
+  <!-- ===== PARTNERSHIPS ===== -->
+  <section class="partnership">
+  <div class="container partnership-grid">
+    <div class="partnership-text reveal">
+      <p class="section-eyebrow light reveal">Naši partneri</p>
+      <h2>Partneri<br/></h2>
+    </div>
+    <div class="partnership-images">
+      <div class="partnership-senec">
+        <img src="{{ url_for('static', filename='images/senec.png') }}" alt="Pro Taekwon plagát" />
+      </div>
+      <div class="partnership-klimasenec">
+        <img src="{{ url_for('static', filename='images/klimasenec.png') }}" alt="Pro Taekwon plagát" />
+      </div>
+      <div class="partnership-dufart">
+        <img src="{{ url_for('static', filename='images/dufart.png') }}" alt="Pro Taekwon plagát" />
+      </div>
+      <div class="partnership-hikvision">
+        <img src="{{ url_for('static', filename='images/hikvision.png') }}" alt="Pro Taekwon plagát" />
+      </div>
+      <div class="partnership-armovna">
+        <img src="{{ url_for('static', filename='images/armovna.jpg') }}" alt="Pro Taekwon plagát" />
+      </div>
     </div>
   </div>
 </section>

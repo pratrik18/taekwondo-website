@@ -338,7 +338,7 @@ body::after {
   display: inline-block;
   padding: 6px 16px;
   border: 3px solid var(--ink);
-  border-radius: 999px;
+  border-radius: 10px;
   margin-bottom: 22px;
   transform: rotate(-3deg);
   box-shadow: 4px 4px 0 var(--ink);
@@ -480,6 +480,72 @@ body::after {
   letter-spacing: 1px;
 }
 
+/* ── PARTNERS ──────────────────────────────────────────────── */
+.partnership {
+  background: var(--ink);
+  padding: 20px 0;
+  position: relative;
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><text y="24" font-size="24">👊</text></svg>') 16 16, auto;
+}
+.partnership-grid {
+  display: grid;
+  grid-template-columns: auto repeat(5, 1fr);
+  align-items: center;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+.partnership-text  { grid-column: 1;  grid-row: 1;}
+.partnership-text h2 {
+  font-family: 'Bungee', cursive;
+  font-size: clamp(26px, 4vw, 38px);
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--cream);
+  margin-bottom: 20px;
+  line-height: 1.15;
+}
+.partnership-text p { color: var(--cream); font-size: 16px; line-height: 1.8; }
+
+.partnership-images{
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+  grid-column: 1 / -1;
+  background: var(--white);
+  padding: 20px;
+  z-index: 7;
+  grid-row: 2;
+}
+.partnership-senec,
+.partnership-klimasenec,
+.partnership-dufart,
+.partnership-hikvision,
+.partnership-armovna {
+  width: 150px;
+  height: 150px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 6px 6px 0 var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: var(--radius);
+}
+
+.partnership-senec:hover,
+.partnership-klimasenec:hover,
+.partnership-dufart:hover,
+.partnership-hikvision:hover,
+.partnership-armovna:hover { transform: translate(-3px,-3px); box-shadow: 9px 9px 0 var(--ink); }
+
+.partnership-grid img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
 /* ── TRAINING ───────────────────────────────────────────── */
 .training {
   background: var(--dark);
@@ -597,7 +663,7 @@ body::after {
   color: var(--ink);
   margin-bottom: 6px;
 }
-.achievement-item p { font-size: 14px; color: var(--muted); }
+.achievement-item p { font-size: 14px; color: var(--ink); }
 .achievement-item::after {
   content: 'KO!';
   position: absolute;
