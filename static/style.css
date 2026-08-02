@@ -947,6 +947,20 @@ body::after {
   .training-grid { grid-template-columns: 1fr; }
   .achievements-grid { grid-template-columns: 1fr; }
   .punching-bag-wrap { display: none; }
+  .partnership-images {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .partnership-senec,
+  .partnership-klimasenec,
+  .partnership-dufart,
+  .partnership-hikvision,
+  .partnership-armovna {
+    width: 100px;
+    height: 100px;
+  }
+}
 
   /* ── CONTACT ── */
   .contact-inner {
@@ -972,7 +986,6 @@ body::after {
   }
 
   .footer-inner { flex-direction: column; text-align: center; }
-}
 
 @media (max-width: 768px) {
   .hero-figure-wrap { display: none; }
