@@ -15,6 +15,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Rye&family=Arvo:wght@400;700&display=swap" rel="stylesheet" />
 </head>
 <body>
+  <div class="global-spotlight"></div>
 
   <!-- ===== PAGE LOADER ===== -->
   <div id="page-loader">
@@ -43,7 +44,6 @@
 
   <!-- ===== HERO ===== -->
   <section id="home" class="hero">
-    <div class="hero-spotlight"></div>
     <div class="hero-burst"></div>
 
     <div class="punching-bag-wrap" id="punchingBag">
@@ -68,13 +68,13 @@
    <!-- ===== ABOUT US ===== -->
   <section class="about">
   <div class="container about-grid">
-    <div class="about-text reveal">
-      <p class="section-eyebrow reveal">O klube</p>
+    <div class="about-text light reveal">
+      <p class="section-eyebrow light reveal">O klube</p>
       <h2>Viac ako šport<br/></h2>
       <p>Pro Taekwon je senecký klub zasvätený ITF Taekwon-Do. Naším cieľom je vychovávať nielen skvelých bojovníkov, ale aj zodpovedných ľudí s pevným charakterom. Veríme, že hodnoty získané na tatami sprevádzajú cvičencov celým životom.</p>
     </div>
 
-    <div class="about-stats reveal reveal-delay-2">
+    <div class="about-stats">
       {% if zobrazitOnas1 %}
       <div class="stat">
         <span class="stat-num">{{ roky }}</span>
@@ -127,13 +127,15 @@
   <!-- ===== TRAINING ===== -->
   <section id="treningy" class="training">
     <div class="container">
-      <p class="section-eyebrow light reveal">Tréningový program</p>
-      <h2 class="section-title light reveal reveal-delay-1">Tréningy</h2>
+      <div class="training-text reveal">
+        <p class="section-eyebrow light reveal">Tréningový program</p>
+        <h2>Tréningy</h2>
+      </div>
 
       <div class="training-grid">
 
   {% if zobrazit1 %}
-  <div class="training-card reveal">
+  <div class="training-card">
     <div class="card-accent">Kolo {{ c1 }}</div>
     <h3>{{ nadpis1 }}</h3>
     <p>{{ popis1 }}</p>
@@ -149,7 +151,7 @@
   {% endif %}
 
   {% if zobrazit2 %}
-  <div class="training-card reveal reveal-delay-1">
+  <div class="training-card">
     <div class="card-accent">Kolo {{ c2 }}</div>
     <h3>{{ nadpis2 }}</h3>
     <p>{{ popis2 }}</p>
@@ -165,7 +167,7 @@
   {% endif %}
 
   {% if zobrazit3 %}
-  <div class="training-card reveal reveal-delay-2">
+  <div class="training-card">
     <div class="card-accent">Kolo {{ c3 }}</div>
     <h3>{{ nadpis3 }}</h3>
     <p>{{ popis3 }}</p>
@@ -200,30 +202,31 @@
   <!-- ===== ACHIEVEMENTS ===== -->
   <section id="uspechy" class="achievements">
     <div class="container">
-      <p class="section-eyebrow reveal">Výsledky a ocenenia</p>
-      <h2 class="section-title reveal reveal-delay-1">Úspechy</h2>
-      <p class="section-intro reveal reveal-delay-2">Naši cvičenci pravidelne reprezentujú klub na regionálnych aj medzinárodných turnajoch. Tu je prehľad najvýznamnejších úspechov.</p>
+      <div class="achievements-text reveal">
+        <p class="section-eyebrow light reveal">Výsledky a ocenenia</p>
+        <h2>Úspechy</h2>
+        <p>Naši cvičenci pravidelne reprezentujú klub na regionálnych aj medzinárodných turnajoch. Tu je prehľad najvýznamnejších úspechov.</p>
 
       <div class="achievements-grid">
-        <div class="achievement-item reveal">
+        <div class="achievement-item">
           <div>
             <h4>Majstrovstvá Slovenska 2025</h4>
             <p>Zlato v kategórii Cadets – formy aj sparring</p>
           </div>
         </div>
-        <div class="achievement-item reveal reveal-delay-1">
+        <div class="achievement-item">
           <div>
             <h4>Stredoeurópsky pohár 2024</h4>
             <p>Striebro v kategórii Juniors – sparring</p>
           </div>
         </div>
-        <div class="achievement-item reveal reveal-delay-2">
+        <div class="achievement-item">
           <div>
             <h4>Otvorený turnaj Bratislava 2024</h4>
             <p>Bronz v kategórii Seniors – pattern</p>
           </div>
         </div>
-        <div class="achievement-item reveal reveal-delay-3">
+        <div class="achievement-item">
           <div>
             <h4>Regionálny pohár Západ 2025</h4>
             <p>Zlaté medaily v 4 kategóriách</p>

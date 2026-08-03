@@ -61,32 +61,23 @@
 
 
 /* ── Hero spotlight ──────────────────────────────────────── */
-.hero-spotlight {
-  position: absolute;
+.global-spotlight {
+  position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 1;
+  z-index: 50; 
   background: radial-gradient(
     600px circle at var(--mx, 50%) var(--my, 50%),
     rgba(224, 165, 38, 0.10) 0%,
     transparent 70%
   );
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 /* Note: hero heading uses a flat "cel-shaded" comic style
    (thick outline + hard offset shadow), defined in style.css.
    Instead of a glossy highlight, it uses a subtle "rubber" bounce animation. */
-
-
-/* ── Cards ───────────────────────────────────────────────── */
-.training-card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
-}
-
-.achievement-item {
-  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
-}
-
 
 /* ── Navigation ─────────────────────────────────────────── */
 .main-nav a {
@@ -110,10 +101,21 @@
   transition: transform 0.2s ease;
 }
 
-.stat:hover {
-  transform: translate(-3px, -3px) rotate(0deg) !important;
+.partnership-senec,
+.partnership-klimasenec,
+.partnership-dufart,
+.partnership-hikvision,
+.partnership-armovna {
+ transition: transform 0.2s ease;
 }
 
+.training-card{
+   transition: transform 0.2s ease;
+}
+
+.achievement-item{
+  transition: transform 0.2s ease;  
+}
 
 /* ── Header scroll ───────────────────────────────────────── */
 .site-header {

@@ -7,17 +7,19 @@
   });
 
   // ── Hero spotlight
-  const hero = document.querySelector('.hero');
-  const spotlight = document.querySelector('.hero-spotlight');
-  if (hero && spotlight) {
-    hero.addEventListener('mousemove', (e) => {
-      const r = hero.getBoundingClientRect();
-      const x = ((e.clientX - r.left) / r.width  * 100).toFixed(1);
-      const y = ((e.clientY - r.top)  / r.height * 100).toFixed(1);
-      spotlight.style.setProperty('--mx', x + '%');
-      spotlight.style.setProperty('--my', y + '%');
-    });
-  }
+  const spotlight = document.querySelector('.global-spotlight');
+
+document.addEventListener('mousemove', (e) => {
+  const x = (e.clientX / window.innerWidth * 100).toFixed(1);
+  const y = (e.clientY / window.innerHeight * 100).toFixed(1);
+  spotlight.style.setProperty('--mx', x + '%');
+  spotlight.style.setProperty('--my', y + '%');
+  spotlight.style.opacity = '1';
+});
+
+document.addEventListener('mouseleave', () => {
+  spotlight.style.opacity = '0';
+});
 
   // ── Header scrolled class
   const header = document.querySelector('.site-header');
