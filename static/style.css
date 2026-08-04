@@ -449,19 +449,25 @@ body::after {
 }
 .partnership-text p { color: var(--cream); font-size: 16px; line-height: 1.8; }
 
-.partnership-images{
-  display: flex;
-  position: relative;
-  align-items: center;
-  justify-content: center;
-  gap: 50px;
+.partnership-images {
+  display: grid;
   grid-column: 1 / -1;
-  border: var(--white) solid 3px;
-  border-radius: var(--radius);
+  grid-row: 2;
+  grid-template-columns: subgrid;
+  grid-template-rows: repeat(2, 100px);
+  row-gap: 20px;
+  align-items: center;
   padding: 20px;
   z-index: 7;
-  grid-row: 2;
 }
+
+/* Grid pozície patria na WRAPPER divy (priame deti .partnership-images) */
+.partnership-senec      { grid-column: 1; grid-row: 1; }
+.partnership-klimasenec { grid-column: 1; grid-row: 2; }
+.partnership-dufart     { grid-column: 3; grid-row: 1; }
+.partnership-hikvision  { grid-column: 3; grid-row: 2; }
+.partnership-armovna    { grid-column: 5; grid-row: 1; }
+
 .partnership-senec,
 .partnership-klimasenec,
 .partnership-dufart,
@@ -476,14 +482,37 @@ body::after {
   box-shadow: 6px 6px 0 var(--ink);
   border: 3px solid var(--ink);
   border-radius: var(--radius);
+  position: relative;    
 }
-
 .partnership-senec:hover,
 .partnership-klimasenec:hover,
 .partnership-dufart:hover,
 .partnership-hikvision:hover,
-.partnership-armovna:hover { transform: translate(-3px,-3px);}
-
+.partnership-armovna:hover {
+  transform: translate(-3px, -3px);
+}
+.partnership-senec p,
+.partnership-klimasenec p,
+.partnership-dufart p,
+.partnership-hikvision p,
+.partnership-armovna p {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: 8px;
+  white-space: nowrap;
+  display: block;
+  color: var(--muted);
+}
+.partnership-senec:hover p,
+.partnership-klimasenec:hover p,
+.partnership-dufart:hover p,
+.partnership-hikvision:hover p,
+.partnership-armovna:hover p {
+  display: block;
+  color: var(--white);
+}
 .partnership-grid img {
   max-width: 100%;
   max-height: 100%;
@@ -931,9 +960,23 @@ body::after {
   .training-grid { grid-template-columns: 1fr; }
   .achievements-grid { grid-template-columns: 1fr; }
   .punching-bag-wrap { display: none; }
+  .partnership-grid {
+    grid-template-columns: 1fr;   /* text a logá pod sebou */
+  }
+
+  .partnership-text {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
   .partnership-images {
-    flex-direction: column;
-    gap: 20px;
+    grid-column: 1;
+    grid-row: 2;
+    grid-template-columns: 1fr;   /* už nie subgrid — vlastný 1-stĺpcový grid */
+    grid-template-rows: none;     /* zrušíme pevné 2 riadky */
+    grid-auto-flow: row;          /* logá pôjdu jedno pod druhým */
+    row-gap: 20px;
+    column-gap: 0;
   }
 
   .partnership-senec,
@@ -941,10 +984,12 @@ body::after {
   .partnership-dufart,
   .partnership-hikvision,
   .partnership-armovna {
+    grid-column: 1;
+    grid-row: auto;
     width: 100px;
     height: 100px;
+    margin: 0 auto;   /* vycentruje logo, ak je kontajner širší */
   }
-}
 
   /* ── CONTACT ── */
   .contact-inner {
@@ -968,7 +1013,7 @@ body::after {
     max-width: 280px;
     margin: 0 auto;
   }
-
+}
   .footer-inner { flex-direction: column; text-align: center; }
 
 @media (max-width: 768px) {
