@@ -961,7 +961,7 @@ body::after {
   .achievements-grid { grid-template-columns: 1fr; }
   .punching-bag-wrap { display: none; }
   .partnership-grid {
-    grid-template-columns: 1fr;   /* text a logá pod sebou */
+    grid-template-columns: 1fr;  
   }
 
   .partnership-text {
@@ -972,24 +972,39 @@ body::after {
   .partnership-images {
     grid-column: 1;
     grid-row: 2;
-    grid-template-columns: 1fr;   /* už nie subgrid — vlastný 1-stĺpcový grid */
-    grid-template-rows: none;     /* zrušíme pevné 2 riadky */
-    grid-auto-flow: row;          /* logá pôjdu jedno pod druhým */
-    row-gap: 20px;
+    grid-template-columns: 1fr;   
+    grid-template-rows: none;     
+    grid-auto-flow: row;          
+    row-gap: 50px;
     column-gap: 0;
   }
 
   .partnership-senec,
-  .partnership-klimasenec,
-  .partnership-dufart,
-  .partnership-hikvision,
-  .partnership-armovna {
-    grid-column: 1;
-    grid-row: auto;
-    width: 100px;
-    height: 100px;
-    margin: 0 auto;   /* vycentruje logo, ak je kontajner širší */
-  }
+.partnership-klimasenec,
+.partnership-dufart,
+.partnership-hikvision,
+.partnership-armovna {
+  grid-column: 1;
+  grid-row: auto;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;   
+  align-items: center;
+}
+.partnership-senec p,
+.partnership-klimasenec p,
+.partnership-dufart p,
+.partnership-hikvision p,
+.partnership-armovna p {
+  position: static;         
+  transform: none;
+  margin: 8px 0 0 0;
+  display: block;           
+  text-align: center;
+  white-space: normal;
+}
 
   /* ── CONTACT ── */
   .contact-inner {

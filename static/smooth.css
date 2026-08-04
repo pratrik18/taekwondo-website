@@ -75,10 +75,6 @@
   transition: opacity 0.3s ease;
 }
 
-/* Note: hero heading uses a flat "cel-shaded" comic style
-   (thick outline + hard offset shadow), defined in style.css.
-   Instead of a glossy highlight, it uses a subtle "rubber" bounce animation. */
-
 /* ── Navigation ─────────────────────────────────────────── */
 .main-nav a {
   transition: color 0.3s ease !important;
