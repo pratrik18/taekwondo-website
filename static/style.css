@@ -964,6 +964,10 @@ body::after {
     grid-template-columns: 1fr;  
   }
 
+  .global-spotlight {
+    display: none;
+  }
+
   .partnership-text {
     grid-column: 1;
     grid-row: 1;
