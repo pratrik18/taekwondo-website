@@ -377,7 +377,8 @@ body::after {
   padding-bottom: 50px;
 }
 .about-text  { 
-  grid-column: 1; 
+  grid-column: 1;
+  z-index: 7; 
 }
 .about-text h2 {
   font-family: 'Bungee', cursive;
@@ -423,100 +424,57 @@ body::after {
   letter-spacing: 1px;
 }
 
-/* ── PARTNERS ──────────────────────────────────────────────── */
-.partnership {
+/* ── PRICE ──────────────────────────────────────────────── */
+.price {
   background: var(--ink);
   padding: 20px 0;
   position: relative;
   cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><text y="24" font-size="24">👊</text></svg>') 16 16, auto;
 }
-.partnership-grid {
-  display: grid;
-  grid-template-columns: auto repeat(5, 1fr);
-  align-items: center;
-  padding-top: 50px;
-  padding-bottom: 50px;
+.price-text{
+  position: relative;
+  z-index: 7;
 }
-.partnership-text  { grid-column: 1;  grid-row: 1;}
-.partnership-text h2 {
+.price-text h2 {
+  display: flex;
+  justify-content: center;
   font-family: 'Bungee', cursive;
-  font-size: clamp(26px, 4vw, 38px);
+  font-size: clamp(75px, 4vw, 38px);
   font-weight: 400;
   text-transform: uppercase;
   color: var(--white);
   margin-bottom: 20px;
   line-height: 1.15;
 }
-.partnership-text p { color: var(--cream); font-size: 16px; line-height: 1.8; }
-
-.partnership-images {
-  display: grid;
-  grid-column: 1 / -1;
-  grid-row: 2;
-  grid-template-columns: subgrid;
-  grid-template-rows: repeat(2, 100px);
-  row-gap: 20px;
-  align-items: center;
-  padding: 20px;
+.price-note {
+  position: relative;
+  justify-content: center;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
   z-index: 7;
 }
-
-/* Grid pozície patria na WRAPPER divy (priame deti .partnership-images) */
-.partnership-senec      { grid-column: 1; grid-row: 1; }
-.partnership-klimasenec { grid-column: 1; grid-row: 2; }
-.partnership-dufart     { grid-column: 3; grid-row: 1; }
-.partnership-hikvision  { grid-column: 3; grid-row: 2; }
-.partnership-armovna    { grid-column: 5; grid-row: 1; }
-
-.partnership-senec,
-.partnership-klimasenec,
-.partnership-dufart,
-.partnership-hikvision,
-.partnership-armovna {
-  width: 100px;
-  height: 100px;
-  padding: 5px;
+.price-note h3{
+  font-family: 'Bungee', cursive;
+  font-size: 100px;
+  font-weight: 400;
+  color: var(--gold-dk);
+}
+.price-note p{
   display: flex;
-  align-items: center;
   justify-content: center;
-  box-shadow: 6px 6px 0 var(--ink);
-  border: 3px solid var(--ink);
-  border-radius: var(--radius);
-  position: relative;    
+  font-family: 'Arvo', serif;
+  font-size: 16px;
+  color: var(--gold);
+  letter-spacing: 1px;
 }
-.partnership-senec:hover,
-.partnership-klimasenec:hover,
-.partnership-dufart:hover,
-.partnership-hikvision:hover,
-.partnership-armovna:hover {
-  transform: translate(-3px, -3px);
-}
-.partnership-senec p,
-.partnership-klimasenec p,
-.partnership-dufart p,
-.partnership-hikvision p,
-.partnership-armovna p {
-  position: absolute;
-  left: 100%;
-  top: 50%;
-  transform: translateY(-50%);
-  margin-left: 8px;
-  white-space: nowrap;
-  display: block;
-  color: var(--muted);
-}
-.partnership-senec:hover p,
-.partnership-klimasenec:hover p,
-.partnership-dufart:hover p,
-.partnership-hikvision:hover p,
-.partnership-armovna:hover p {
-  display: block;
+.price-description{
+  display: flex;
+  justify-content: center;
+  font-family: 'Arvo', serif;
+  font-size: 16px;
   color: var(--white);
-}
-.partnership-grid img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+  letter-spacing: 1px;
 }
 
 /* ── TRAINING ───────────────────────────────────────────── */
@@ -531,6 +489,9 @@ body::after {
   grid-template-columns: repeat(3, 1fr);
   gap: 28px;
   margin-bottom: 40px;
+}
+.training-text {
+  z-index: 7;
 }
 .training-text h2 {
   font-family: 'Bungee', cursive;
@@ -575,7 +536,7 @@ body::after {
   color: var(--ink);
   margin-top: 6px;
 }
-.training-card p { font-size: 14px; color: var(--ink); line-height: 1.7; flex: 1; }
+.training-card p { font-size: 14px; color: var(--ink); line-height: 1.7; flex: 1; z-index: 7;}
 .schedule { display: flex; flex-direction: column; gap: 8px; }
 .schedule li {
   display: flex;
@@ -930,6 +891,106 @@ body::after {
 .footer-copy { font-family: 'Arvo', serif; font-size: 13px; color: var(--cream-dk); }
 .footer-note { font-family: 'Arvo', serif; font-size: 12px; color: var(--muted); }
 
+/* ── PARTNERS ──────────────────────────────────────────────── */
+.partnership {
+  background: var(--ink);
+  padding: 20px 0;
+  position: relative;
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><text y="24" font-size="24">👊</text></svg>') 16 16, auto;
+}
+.partnership-grid {
+  display: grid;
+  grid-template-columns: auto repeat(5, 1fr);
+  align-items: center;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+.partnership-text  { grid-column: 1;  grid-row: 1;}
+.partnership-text h2 {
+  font-family: 'Bungee', cursive;
+  font-size: clamp(26px, 4vw, 38px);
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 20px;
+  line-height: 1.15;
+}
+.partnership-text p { color: var(--cream); font-size: 16px; line-height: 1.8; }
+
+.partnership-images {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-row: 2;
+  grid-template-columns: subgrid;
+  grid-template-rows: repeat(2, 100px);
+  row-gap: 20px;
+  align-items: center;
+  padding: 20px;
+  z-index: 7;
+}
+
+.partnership-senec      { grid-column: 1; grid-row: 1; }
+.partnership-klimasenec { grid-column: 1; grid-row: 2; }
+.partnership-dufart     { grid-column: 3; grid-row: 1; }
+.partnership-hikvision  { grid-column: 3; grid-row: 2; }
+.partnership-armovna    { grid-column: 5; grid-row: 1; }
+.partnership-boa        { grid-column: 5; grid-row: 2; }
+
+.partnership-senec,
+.partnership-klimasenec,
+.partnership-dufart,
+.partnership-hikvision,
+.partnership-armovna,
+.partnership-boa {
+  width: 100px;
+  height: 100px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 6px 6px 0 var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: var(--radius);
+  position: relative;    
+}
+.partnership-senec:hover,
+.partnership-klimasenec:hover,
+.partnership-dufart:hover,
+.partnership-hikvision:hover,
+.partnership-armovna:hover,
+.partnership-boa:hover {
+  transform: translate(-3px, -3px);
+}
+.partnership-senec p,
+.partnership-klimasenec p,
+.partnership-dufart p,
+.partnership-hikvision p,
+.partnership-armovna p,
+.partnership-boa p {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: 8px;
+  white-space: nowrap;
+  display: block;
+  color: var(--muted);
+}
+.partnership-senec:hover p,
+.partnership-klimasenec:hover p,
+.partnership-dufart:hover p,
+.partnership-hikvision:hover p,
+.partnership-armovna:hover p,
+.partnership-boa:hover p {
+  display: block;
+  color: var(--white);
+}
+.partnership-grid img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
 /* ── RESPONSIVE ─────────────────────────────────────────── */
 @media (max-width: 900px) {
   .about-grid {
@@ -983,11 +1044,12 @@ body::after {
     column-gap: 0;
   }
 
-  .partnership-senec,
+.partnership-senec,
 .partnership-klimasenec,
 .partnership-dufart,
 .partnership-hikvision,
-.partnership-armovna {
+.partnership-armovna,
+.partnership-boa {
   grid-column: 1;
   grid-row: auto;
   width: 100px;
@@ -1001,7 +1063,8 @@ body::after {
 .partnership-klimasenec p,
 .partnership-dufart p,
 .partnership-hikvision p,
-.partnership-armovna p {
+.partnership-armovna p,
+.partnership-boa p {
   position: static;         
   transform: none;
   margin: 8px 0 0 0;
@@ -1009,7 +1072,19 @@ body::after {
   text-align: center;
   white-space: normal;
 }
-
+.price-text h2 {
+  font-size: clamp(50px, 4vw, 38px);
+  align-items: center;
+}
+.price-note h3{
+  font-size: 75px;
+}
+.price-note p{
+  font-size: 12px;
+}
+.price-description{
+  font-size: 12px;
+}
   /* ── CONTACT ── */
   .contact-inner {
     grid-template-columns: 1fr;
