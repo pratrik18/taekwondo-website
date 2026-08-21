@@ -135,6 +135,17 @@ def get_landing_data():
         "zobrazitOnas3": stavOnas3 != "Nezobraziť"
     }
 
+def sanitize_sheet_value(value):
+    if value is None:
+        return ""
+
+    value = str(value)
+
+    if value.startswith(("=", "+", "-", "@")):
+        return "'" + value
+
+    return value
+
 def contact_exists(email, telefon):
     all_rows = database.get_all_values()
 
@@ -162,5 +173,10 @@ def append_contact(meno, priezvisko, telefon, email):
     suhlas_udeleny_o = datetime.now(ZoneInfo("Europe/Bratislava")).strftime("%Y-%m-%d %H:%M:%S")
 
     new_id = _get_next_id()
-    database.append_row([new_id, meno, priezvisko, telefon, email, suhlas_udeleny_o])
+    database.append_row([new_id,
+                         sanitize_sheet_value(meno),
+                         sanitize_sheet_value(priezvisko),
+                         sanitize_sheet_value(telefon),
+                         sanitize_sheet_value(email),
+                         suhlas_udeleny_o])
     return True
