@@ -60,18 +60,18 @@
     </div>
 
     <div class="container hero-content">
-      <p class="hero-eyebrow reveal">Taekwondo ITF · Senec</p>
-      <h1 class="reveal reveal-delay-1">Pro Taekwon</h1>
+      <p class="hero-eyebrow">Taekwondo ITF · Senec</p>
+      <h1>Pro Taekwon</h1>
     </div>
   </section>
 
    <!-- ===== ABOUT US ===== -->
   <section class="about">
-  <div class="container about-grid">
-    <div class="about-text light reveal">
-      <p class="section-eyebrow light reveal">O klube</p>
-      <h2>Viac ako šport<br/></h2>
-      <p>Pro Taekwon je senecký klub zasvätený ITF Taekwon-Do. Naším cieľom je vychovávať nielen skvelých bojovníkov, ale aj zodpovedných ľudí s pevným charakterom. Veríme, že hodnoty získané na tatami sprevádzajú cvičencov celým životom.</p>
+  <div class="container about-grid reveal">
+    <div class="about-text">
+      <p class="section-eyebrow">O klube</p>
+      <h2 class="section-title">Viac ako šport<br/></h2>
+      <p class="about-description">Pro Taekwon je senecký klub zasvätený ITF Taekwon-Do. Naším cieľom je vychovávať nielen skvelých bojovníkov, ale aj zodpovedných ľudí s pevným charakterom. Veríme, že hodnoty získané na tatami sprevádzajú cvičencov celým životom.</p>
     </div>
 
     <div class="about-stats">
@@ -99,9 +99,9 @@
 
   <!-- ===== PRICE ===== -->
   <section class="price">
-  <div class="container">
+  <div class="container reveal">
     <div class="price-text">
-      <h2>JEDNOTNÁ CENA<br/></h2>
+      <h2 class="section-title">JEDNOTNÁ CENA<br/></h2>
     <span class="price-note">
       <h3>40€</h3>
       <p>/Mesačne</p>
@@ -112,10 +112,10 @@
 
   <!-- ===== TRAINING ===== -->
   <section id="treningy" class="training">
-    <div class="container">
-      <div class="training-text reveal">
-        <p class="section-eyebrow light reveal">Tréningový program</p>
-        <h2>Tréningy</h2>
+    <div class="container reveal">
+      <div class="training-text">
+        <p class="section-eyebrow">Tréningový program</p>
+        <h2 class="section-title">Tréningy</h2>
       </div>
 
       <div class="training-grid">
@@ -172,7 +172,7 @@
 
       </div>
 
-      <div class="training-location reveal">
+      <div class="training-location">
         <div>
           {% if nazovInfo %}
             <strong>{{ nazovInfo }}</strong>
@@ -187,10 +187,10 @@
 
   <!-- ===== ACHIEVEMENTS ===== -->
   <section id="uspechy" class="achievements">
-    <div class="container">
-      <div class="achievements-text reveal">
-        <p class="section-eyebrow light reveal">Výsledky a ocenenia</p>
-        <h2>Úspechy</h2>
+    <div class="container reveal">
+      <div class="achievements-text">
+        <p class="section-eyebrow">Výsledky a ocenenia</p>
+        <h2 class="section-title">Úspechy</h2>
         <p>Naši cvičenci pravidelne reprezentujú klub na regionálnych aj medzinárodných turnajoch. Tu je prehľad najvýznamnejších úspechov.</p>
 
       <div class="achievements-grid">
@@ -224,17 +224,14 @@
 
   <!-- ===== CONTACT ===== -->
   <section id="kontakt" class="contact">
-    <div class="container contact-inner">
-      
-      <div class="contact-image reveal reveal-delay-1">
+    <div class="container contact-inner reveal">
+      <div class="contact-image">
         <img src="{{ url_for('static', filename='images/plagat.jpg') }}" alt="Pro Taekwon plagát" />
       </div>
-    
-      <div class="contact-cta reveal reveal-delay-1">
-        <p class="section-eyebrow light reveal">Kontakt</p>
-        <h2 class="light form-heading">Napíš nám</h2>
-        <p class="form-subtext">Máš otázky alebo chceš vyskúšať prvý tréning zadarmo? Ozvi sa nám.</p>
 
+      <div class="contact-cta">
+        <p class="section-eyebrow">Kontakt</p>
+        <h2 class="section-title">Pridaj sa k nám</h2>
         <form id="contactForm" action="{{ url_for('submit') }}" method="POST">
           <div class="form-row">
             <div class="form-group">
@@ -291,10 +288,10 @@
 
   <!-- ===== PARTNERSHIPS ===== -->
   <section class="partnership">
-  <div class="container partnership-grid">
-    <div class="partnership-text reveal">
-      <p class="section-eyebrow light reveal">Naši partneri</p>
-      <h2>Partneri<br/></h2>
+  <div class="container partnership-grid reveal">
+    <div class="partnership-text">
+      <p class="section-eyebrow">Naši partneri</p>
+      <h2 class="section-title">Partneri<br/></h2>
     </div>
     <div class="partnership-images">
       <div class="partnership-senec">
