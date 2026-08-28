@@ -36,7 +36,7 @@ document.addEventListener('mouseleave', () => {
         observer.unobserve(e.target);
       }
     });
-  }, { threshold: 0.005, rootMargin: '0px 0px -40px 0px' });
+  }, { threshold: 0.005, rootMargin: '0px 0px -15px 0px' });
 
   revealEls.forEach(el => observer.observe(el));
 

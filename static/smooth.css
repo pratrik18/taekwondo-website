@@ -214,3 +214,9 @@ html::-webkit-scrollbar {
     height: 4px;
   }
 }
+
+@media (max-width: 900px) {
+  .reveal {
+  transform: translateY(5px);
+}
+}
