@@ -1,6 +1,6 @@
 import re
 
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 
 import config
 import sheets_service
@@ -28,6 +28,14 @@ def is_valid_phone(telefon):
 def index():
     data = sheets_service.get_landing_data()
     return render_template("index.html", **data)
+
+@app.route('/sitemap.xml')
+def sitemap():
+    return send_from_directory('static', 'sitemap.xml', mimetype='application/xml')
+
+@app.route('/robots.txt')
+def robots():
+    return send_from_directory('static', 'robots.txt')
 
 
 @app.route("/submit", methods=["POST"])
