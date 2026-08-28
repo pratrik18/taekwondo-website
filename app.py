@@ -31,11 +31,11 @@ def index():
 
 @app.route('/sitemap.xml')
 def sitemap():
-    return send_from_directory('static', 'sitemap.xml', mimetype='application/xml')
+    return send_from_directory('templates', 'sitemap.xml', mimetype='application/xml')
 
 @app.route('/robots.txt')
 def robots():
-    return send_from_directory('static', 'robots.txt')
+    return send_from_directory('templates', 'robots.txt')
 
 
 @app.route("/submit", methods=["POST"])
