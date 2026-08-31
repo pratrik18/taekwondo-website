@@ -922,7 +922,7 @@ body::after {
 
 /* ── RESPONSIVE ─────────────────────────────────────────── */
 @media (max-width: 900px) {
-  .hero-content h1 { font-size: 63px; }
+  .hero-content h1 { font-size: 45px; }
   
   .about-grid {
     grid-template-columns: 1fr;
