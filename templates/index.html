@@ -226,63 +226,19 @@
   <!-- ===== CONTACT ===== -->
   <section id="kontakt" class="contact">
     <div class="container contact-inner reveal">
+      <div class="contact-text">
+        <p class="section-eyebrow">Kontakt</p>
+        <h2 class="section-title">Prihláste sa pomocou ClubZone<br/></h2>
+      </div>
       <div class="contact-image">
         <img src="{{ url_for('static', filename='images/plagat.jpg') }}" alt="Pro Taekwon plagát" />
+        <img src="{{ url_for('static', filename='images/ClubZone.jpg') }}" alt="Pro Taekwon plagát" />
       </div>
-
+      <div class="contact-text-description">
+        <p>Alebo kliknite na tlačidlo nižšie</p>
+      </div>
       <div class="contact-cta">
-        <p class="section-eyebrow">Kontakt</p>
-        <h2 class="section-title">Pridaj sa k nám</h2>
-        <form id="contactForm" action="{{ url_for('submit') }}" method="POST">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="meno">Meno</label>
-              <input type="text" id="meno" name="meno" placeholder="Tvoje meno" required>
-              <span class="form-error" data-for="meno">Meno je povinné.</span>
-            </div>
-            <div class="form-group">
-              <label for="priezvisko">Priezvisko</label>
-              <input type="text" id="priezvisko" name="priezvisko" placeholder="Tvoje priezvisko" required>
-              <span class="form-error" data-for="priezvisko">Priezvisko je povinné.</span>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="email">E-mail</label>
-              <input type="email" id="email" name="email" placeholder="tvoj@email.sk" required>
-              <span class="form-error" data-for="email">E-mail je povinný.</span>
-            </div>
-            <div class="form-group">
-              <label for="telefon">Telefón</label>
-              <input type="tel" id="telefon" name="telefon" placeholder="Tvoj telefón" required>
-              <span class="form-error" data-for="telefon">Telefón je povinný.</span>
-            </div>
-          </div>
-
-          <div class="form-group form-group-consent">
-            <label class="consent-label" for="suhlas">
-              <input type="checkbox" id="suhlas" name="suhlas" required>
-              <span class="consent-box" aria-hidden="true"></span>
-              <span class="consent-text">
-                Súhlasím so spracovaním mojich osobných údajov (meno, priezvisko, telefón, e-mail) za účelom vybavenia mojej žiadosti a kontaktovania mojou osobou.
-              </span>
-            </label>
-            <details class="consent-details">
-              <summary>Viac o spracovaní údajov</summary>
-              <p>
-                Vaše údaje spracúva Pro Taekwon Senec výhradne na účely odpovede na váš dopyt
-                a evidencie záujemcov o tréning. Údaje neposkytujeme tretím stranám na marketingové
-                účely a uchovávame ich len po nevyhnutnú dobu. Súhlas môžete kedykoľvek odvolať
-                e-mailom na <span href="mailto:medved.adam2007@gmail.com">medved.adam2007@gmail.com</span>. V súlade s GDPR máte právo na prístup,
-                opravu, výmaz a prenosnosť svojich údajov.
-              </p>
-            </details>
-            <span class="form-error" data-for="suhlas">Pre odoslanie formulára je potrebný súhlas so spracovaním osobných údajov.</span>
-          </div>
-
-          <button type="submit" class="btn btn-primary btn-large">Odoslať</button>
-        </form>
+        <a href="https://clubzone.sk/prihlaska/taekwondo-itf-senec" target="_blank" class="btn btn-primary">Prihlásiť sa na tréning</a>
       </div>
     </div>
   </section>

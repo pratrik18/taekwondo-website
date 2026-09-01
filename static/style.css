@@ -605,218 +605,35 @@ body::after {
   cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><text y="24" font-size="24">👊</text></svg>') 16 16, auto;
 }
 
-.contact-inner {
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  grid-template-rows: 1fr; 
-  gap: 60px;
-  align-items: center;
-}
-
 .contact-image {
   display: flex;
   justify-content: center;
   align-items: center;
-  grid-column: 2;
-  grid-row: 1;
+  margin-top: 60px;
+  gap: 200px;
 }
 
 .contact-image img {
-    display: block;
     width: 100%;
-    max-width: 350px;
-    height: auto;
+    max-width: 300px;
+    max-height: 400px;
 }
 
-.contact-cta::before,
-.contact-cta::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  width: 34px; height: 34px;
-  background: var(--ink);
-  border-radius: 50%;
-  transform: translateY(-50%);
-}
-
-.contact-cta::before { left: -17px; }
-.contact-cta::after { right: -17px; }
-
-.form-subtext {
-  font-size: 15px;
-  color: var(--cream-dk);
-  margin-bottom: 40px;
-}
-
-#contactForm {
+.contact-text-description {
   display: flex;
+  font-size: 26px;
   flex-direction: column;
-  gap: 32px;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.form-group label {
-  font-family: 'Bungee', cursive;
-  font-size: 11px;
-  font-weight: 400;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--gold);
-}
-
-.contact-cta input {
-  border: none;
-  border-bottom: 3px solid var(--cream-dk);
-  padding: 8px 4px;
-  background: none;
-  font-family: 'Arvo', serif;
-  font-size: 16px;
-  color: var(--white);
-  transition: border-color var(--transition);
-}
-
-.contact-cta input::placeholder { color: rgba(251,243,222,0.4); }
-
-.contact-cta input:focus {
-  outline: none;
-  border-bottom-color: var(--gold);
-}
-
-.contact-cta input.invalid { border-bottom-color: var(--gold-dk); }
-
-/* ── Consent to the processing of personal data (GDPR checkbox) ── */
-.form-group-consent {
-  gap: 4px;
-}
-.consent-label {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  cursor: pointer;
-  font-family: 'Arvo', serif;
-  font-size: 14px;
-  color: var(--cream-dk);
-  line-height: 1.55;
-}
-.consent-label input[type="checkbox"] {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-.consent-box {
-  position: relative;
-  flex-shrink: 0;
-  width: 26px;
-  height: 26px;
-  margin-top: 1px;
-  background: var(--cream);
-  border: 3px solid var(--gold);
-  border-radius: 6px;
-  transition: background var(--transition), border-color var(--transition);
-}
-.consent-box::after {
-  content: '✓';
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
   justify-content: center;
-  font-family: 'Bungee', cursive;
-  font-size: 15px;
-  color: var(--ink);
-  opacity: 0;
-  transform: scale(0.4);
-  transition: opacity 0.15s ease, transform 0.15s ease;
-}
-.consent-label input:checked + .consent-box {
-  background: var(--gold);
-  border-color: var(--ink);
-}
-.consent-label input:checked + .consent-box::after {
-  opacity: 1;
-  transform: scale(1);
-}
-.consent-label input:focus-visible + .consent-box {
-  outline: 3px solid var(--gold-dk);
-  outline-offset: 2px;
-}
-.consent-label input.invalid + .consent-box {
-  border-color: var(--gold-dk);
-}
-.consent-text a { color: var(--gold); text-decoration: underline; }
-.consent-text a:hover { color: var(--gold-dk); }
-
-.consent-details {
-  margin: 6px 0 2px 38px;
-}
-.consent-details summary {
-  cursor: pointer;
-  font-family: 'Arvo', serif;
-  font-size: 13px;
-  color: var(--gold);
-  text-decoration: underline;
-  list-style: none;
-}
-.consent-details summary::-webkit-details-marker { display: none; }
-.consent-details p {
-  margin-top: 8px;
-  font-size: 13px;
-  color: var(--cream-dk);
-  line-height: 1.6;
-  max-width: 480px;
-}
-
-.form-error {
-  display: none;
   align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  word-break: break-word;
-  font-family: 'Bungee', cursive;
-  font-size: 11px;
-  font-weight: 400;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  color: var(--gold-dk);
-}
-
-.form-error.visible { display: flex; }
-
-.form-error::before {
-  content: '✕';
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--gold-dk);
+  margin-top: 50px;
   color: var(--white);
-  font-size: 10px;
-  flex-shrink: 0;
 }
 
-#contactForm button {
-  align-self: flex-start;
-  margin-top: 8px;
-  border-radius: 999px;
-}
-
-@media (max-width: 640px) {
-  .form-row { grid-template-columns: 1fr; gap: 24px; }
-  .contact-cta { padding: 32px 24px; }
+.contact-cta{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
 }
 
 /* ── FOOTER ─────────────────────────────────────────────── */
@@ -1017,22 +834,11 @@ body::after {
   font-size: 12px;
 }
   /* ── CONTACT ── */
-  .contact-inner {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto;
-    gap: 48px;
-  }
   .contact-image {
-    grid-column: 1;
-    grid-row: 1;
-  }
-  .contact-cta {
-    grid-column: 1;
-    grid-row: 2;
-  }
-  .contact-cta::before,
-  .contact-cta::after {
-    display: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
   }
   .contact-image img {
     max-width: 280px;
