@@ -26,7 +26,6 @@ client = gspread.authorize(creds)
 
 book = client.open_by_key(config.SPREADSHEET_ID)
 landing = book.worksheet("Landing")
-database = book.worksheet("Database")
 
 _cache = {}
 
