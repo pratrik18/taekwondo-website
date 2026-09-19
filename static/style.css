@@ -50,7 +50,7 @@
 html { scroll-behavior: smooth; }
 html, body { overflow-x: hidden; width: 100%; }
 body {
-  font-family: 'Arvo', serif;
+  font-family: 'Roboto Slab', serif;
   font-size: 16px;
   color: var(--ink);
   background: var(--cream);
@@ -59,7 +59,7 @@ body {
 }
 img { display: block; max-width: 100%; }
 ul { list-style: none; }
-a { text-decoration: none; color: inherit; }
+a { text-decoration: none; }
 
 /* ── VINTAGE FILM OVERLAY (halftone + grain + vignette) ───── */
 body::before {
