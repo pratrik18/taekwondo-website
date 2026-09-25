@@ -648,6 +648,14 @@ body::after {
 .footer-logo { height: 36px; width: auto; opacity: 0.9; border-radius: 0px; border: 2px solid var(--gold); }
 .footer-copy { font-family: 'Arvo', serif; font-size: 13px; color: var(--cream-dk); }
 .footer-note { font-family: 'Arvo', serif; font-size: 12px; color: var(--muted); }
+.ICO{
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  font-family: 'Arvo', serif; 
+  font-size: 13px; 
+  color: var(--cream-dk);
+}
 
 /* ── PARTNERS ──────────────────────────────────────────────── */
 .partnership {
