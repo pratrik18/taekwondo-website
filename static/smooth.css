@@ -1,4 +1,5 @@
 /* ── Page loader ─────────────────────────────────────────── */
+
 #page-loader {
   position: fixed;
   inset: 0;
@@ -39,6 +40,7 @@
 
 
 /* ── Scroll fade-in ──────────────────────────────────────── */
+
 .reveal {
   opacity: 0;
   transform: translateY(28px);
@@ -46,12 +48,15 @@
   position: relative;
   z-index: 7;
 }
+
 .about-text.reveal {
   transform: none !important;
 }
+
 .about-text.reveal.visible {
   transform: none !important;
 }
+
 .reveal.visible {
   opacity: 1;
   transform: translateY(0);
@@ -63,11 +68,12 @@
 
 
 /* ── Hero spotlight ──────────────────────────────────────── */
+
 .global-spotlight {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 50; 
+  z-index: 50;
   background: radial-gradient(
     600px circle at var(--mx, 50%) var(--my, 50%),
     rgba(224, 165, 38, 0.10) 0%,
@@ -77,7 +83,9 @@
   transition: opacity 0.3s ease;
 }
 
+
 /* ── Navigation ─────────────────────────────────────────── */
+
 .main-nav a {
   transition: color 0.3s ease !important;
 }
@@ -88,13 +96,18 @@
 
 
 /* ── Buttons ────────────────────────────────────────────── */
+
 .btn {
-  transition: background 0.2s ease, color 0.2s ease,
-              transform 0.15s ease, box-shadow 0.15s ease !important;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease !important;
 }
 
 
 /* ── HOVER ──────────────────────────────────────────── */
+
 .stat {
   transition: transform 0.2s ease;
 }
@@ -105,18 +118,20 @@
 .partnership-hikvision,
 .partnership-armovna,
 .partnership-boa {
- transition: transform 0.2s ease;
+  transition: transform 0.2s ease;
 }
 
-.training-card{
-   transition: transform 0.2s ease;
+.training-card {
+  transition: transform 0.2s ease;
 }
 
-.achievement-item{
-  transition: transform 0.2s ease;  
+.achievement-item {
+  transition: transform 0.2s ease;
 }
+
 
 /* ── Header scroll ───────────────────────────────────────── */
+
 .site-header {
   transition: box-shadow 0.4s ease;
 }
@@ -127,6 +142,7 @@
 
 
 /* ── Custom scrollbar in the shape of a belt ──────────────────── */
+
 html {
   scrollbar-width: none;
 }
@@ -188,7 +204,9 @@ html::-webkit-scrollbar {
   height: 6px;
   background-color: var(--stripe-color, transparent);
   opacity: var(--stripe-opacity, 0);
-  transition: background-color 0.35s ease, opacity 0.35s ease;
+  transition:
+    background-color 0.35s ease,
+    opacity 0.35s ease;
 }
 
 .stripe-top {
@@ -201,6 +219,7 @@ html::-webkit-scrollbar {
 
 
 @media (max-width: 640px) {
+
   #belt-scrollbar {
     width: 14px;
   }
@@ -216,7 +235,29 @@ html::-webkit-scrollbar {
 }
 
 @media (max-width: 900px) {
+
   .reveal {
-  transform: translateY(5px);
+    transform: translateY(5px);
+  }
 }
+
+
+/* ── Plasma hero background ─────────────────────────────── */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.plasma-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+
+  z-index: 0;
+  pointer-events: none;
+
+  opacity: 1;
 }
