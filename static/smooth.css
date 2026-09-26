@@ -240,24 +240,3 @@ html::-webkit-scrollbar {
     transform: translateY(5px);
   }
 }
-
-
-/* ── Plasma hero background ─────────────────────────────── */
-
-.hero {
-  position: relative;
-  overflow: hidden;
-}
-
-.plasma-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-
-  z-index: 0;
-  pointer-events: none;
-
-  opacity: 1;
-}

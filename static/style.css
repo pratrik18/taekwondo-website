@@ -642,6 +642,179 @@ body::after {
   justify-content: center;
 }
 
+/* ============================================================
+   MAGIC BENTO — ACHIEVEMENTS
+   Clean full-perimeter border beam.
+============================================================ */
+.achievements-grid {
+  perspective: 1200px;
+}
+
+.achievement-item.magic-bento-card {
+  --glow-x: 50%;
+  --glow-y: 50%;
+  --glow-intensity: 0;
+  --glow-radius: 220px;
+
+  overflow: hidden;
+  isolation: isolate;
+  transform-style: preserve-3d;
+  will-change: transform;
+  border-color: transparent;
+  transition:
+    transform 0.18s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+  background:
+    radial-gradient(
+      var(--glow-radius) circle at var(--glow-x) var(--glow-y),
+      rgba(233, 180, 76, calc(var(--glow-intensity) * 0.16)),
+      transparent 62%
+    ),
+    var(--grey);
+}
+
+/* Jemné svetlo pod kurzorom. */
+.magic-bento-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: var(--glow-intensity);
+  background:
+    radial-gradient(
+      180px circle at var(--glow-x) var(--glow-y),
+      rgba(255, 244, 207, 0.13),
+      transparent 70%
+    );
+  transition: opacity 0.25s ease;
+}
+
+/*
+   FULL-PERIMETER BORDER BEAM
+   Gradient sa NEOTÁČA ako element. Otáča sa iba jeho conic
+   gradient cez animovanú CSS premennú. Samotný prstenec preto
+   zostáva presne prilepený na obdĺžnik a nemôže vytvoriť
+   trojuholníkový artefakt.
+*/
+.magic-bento-border {
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 1;
+
+  padding: 2px;
+
+  border-radius: var(--radius);
+
+  pointer-events: none;
+
+  background: conic-gradient(
+
+    from var(--beam-angle),
+
+    transparent 0deg,
+
+    transparent 300deg,
+
+    rgba(212, 175, 55, 0.025) 308deg,
+
+    rgba(143, 107, 22, 0.12) 316deg,
+
+    rgba(212, 175, 55, 0.34) 324deg,
+
+    rgba(255, 241, 168, 0.90) 330deg,
+
+    rgba(212, 175, 55, 0.34) 336deg,
+
+    rgba(143, 107, 22, 0.12) 344deg,
+
+    rgba(212, 175, 55, 0.025) 352deg,
+
+    transparent 360deg
+
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: magic-bento-border-beam 4.8s linear infinite;
+}
+
+@property --beam-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* Obsah zostáva nad beamom. */
+.magic-bento-card > div:not(.magic-bento-particle) {
+  position: relative;
+  z-index: 3;
+  background: transparent;
+  transform: translateZ(20px);
+}
+
+/* Pôvodné KO! zostáva nad beamom. */
+.magic-bento-card::after {
+  z-index: 4;
+}
+
+@keyframes magic-bento-border-beam {
+  from {
+    --beam-angle: 0deg;
+  }
+  to {
+    --beam-angle: 360deg;
+  }
+}
+
+.magic-bento-card:hover {
+  border-color: transparent;
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.18),
+    0 0 24px rgba(233, 180, 76, 0.08);
+}
+
+.magic-bento-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(233, 180, 76, 0.95);
+  box-shadow: 0 0 7px rgba(233, 180, 76, 0.70);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.magic-bento-ripple {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 4;
+  background:
+    radial-gradient(
+      circle,
+      rgba(233, 180, 76, 0.22) 0%,
+      rgba(233, 180, 76, 0.08) 35%,
+      transparent 70%
+    );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .magic-bento-border {
+    animation: none;
+    --beam-angle: 0deg;
+  }
+}
+
 /* ── CONTACT ────────────────────────────────────────────── */
 .contact {
   background: var(--ink);

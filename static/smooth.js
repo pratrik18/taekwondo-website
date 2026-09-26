@@ -115,111 +115,97 @@
 
 
 // ══════════════════════════════════════════════════════════════
-// PLASMA HERO BACKGROUND
+// PLASMA BACKGROUND
+// Optimized WebGL2 implementation
 // ══════════════════════════════════════════════════════════════
 
 (function () {
 
-  const hero =
-  document.querySelector('.hero');
-
   const container =
-  document.getElementById('hero-plasma');
+    document.getElementById('hero-plasma');
 
-  if (!hero || !container) return;
-
-
-  // ── Create canvas
-  const canvas =
-    document.createElement('canvas');
+  if (!container) return;
 
 
-  canvas.className =
-    'plasma-canvas';
+  // ── Performance settings
+  const prefersReducedMotion =
+    window.matchMedia?.(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
 
 
-  canvas.style.position =
-    'absolute';
+  const color = '#A32620';
 
-  canvas.style.inset =
-    '0';
+  const speed = 0.6;
 
-  canvas.style.width =
-    '100%';
+  const scale = 1.1;
 
-  canvas.style.height =
-    '100%';
+  const opacity = 0.8;
 
-  canvas.style.display =
-    'block';
-
-  canvas.style.pointerEvents =
-    'none';
-
-  canvas.style.zIndex =
-    '0';
+  const mouseInteractive = true;
 
 
-  container.appendChild(canvas);
-
-  console.log('PLASMA: canvas created');
-  console.log('PLASMA: hero:', hero);
-  console.log('PLASMA: container:', container);
-  console.log('PLASMA: canvas:', canvas);
-
-  // ── Create WebGL2 context
-  const gl =
-    canvas.getContext(
-      'webgl2',
-      {
-        alpha: true,
-        antialias: false
-      }
-    );
-
-  console.log('PLASMA: WebGL2:', gl);
+  /*
+   * Lower render resolution dramatically reduces
+   * GPU workload while keeping the visual effect smooth.
+   */
+  const renderScale = 0.50;
 
 
-  if (!gl) {
+  /*
+   * Maximum DPR prevents extremely high-density
+   * displays from multiplying GPU workload.
+   */
+  const maxDpr = 1.5;
 
-    console.warn(
-      'WebGL2 nie je podporované.'
-    );
 
-    canvas.remove();
+  /*
+   * The original shader used 60 raymarching iterations.
+   * 36 gives a much better performance/quality balance.
+   */
+  const iterations = 36;
 
-    return;
+
+  /*
+   * Mouse smoothing strength.
+   * Higher = faster response.
+   * Lower = smoother movement.
+   */
+  const mouseSmoothness = 12;
+
+
+  // ── Color conversion
+  function hexToRgb(hex) {
+
+    const result =
+      /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i
+        .exec(hex);
+
+    if (!result) {
+      return [1, 0.5, 0.2];
+    }
+
+    return [
+      parseInt(result[1], 16) / 255,
+      parseInt(result[2], 16) / 255,
+      parseInt(result[3], 16) / 255
+    ];
   }
 
 
-  // ══════════════════════════════════════════════════════════
-  // SETTINGS
-  // ══════════════════════════════════════════════════════════
-
-  const SPEED =
-    0.6;
-
-  const RENDER_SCALE =
-    0.7;
-
-  const MAX_DPR =
-    1.5;
-
-  const TARGET_FPS =
-    60;
-
-
-  // ══════════════════════════════════════════════════════════
-  // VERTEX SHADER
-  // ══════════════════════════════════════════════════════════
-
-  const vertexShaderSource = `#version 300 es
+  // ── Vertex shader
+  const vertexSource = `#version 300 es
 
     precision highp float;
 
     in vec2 position;
+    in vec2 uv;
+
+    out vec2 vUv;
 
     void main() {
+
+      vUv = uv;
 
       gl_Position =
         vec4(
@@ -233,225 +219,293 @@
   `;
 
 
-  // ══════════════════════════════════════════════════════════
-  // FRAGMENT SHADER
-  // ══════════════════════════════════════════════════════════
-
-  const fragmentShaderSource = `#version 300 es
+  // ── Fragment shader
+  const fragmentSource = `#version 300 es
 
     precision highp float;
 
     uniform vec2 iResolution;
     uniform float iTime;
-    uniform vec2 iMouse;
+
+    uniform vec3 uCustomColor;
+
+    uniform float uSpeed;
+    uniform float uScale;
+    uniform float uOpacity;
+
+    uniform vec2 uMouse;
+    uniform float uMouseInteractive;
+
+    uniform float uQuality;
+    uniform float uStepScale;
 
     out vec4 fragColor;
 
 
-    void main() {
+    void mainImage(
+      out vec4 o,
+      vec2 C
+    ) {
 
-      // ─────────────────────────────────────────────
-      // UV coordinates
-      // ─────────────────────────────────────────────
-
-      vec2 uv =
-        gl_FragCoord.xy /
-        iResolution.xy;
+      vec2 center =
+        iResolution.xy * 0.5;
 
 
-      // ─────────────────────────────────────────────
-      // Centered coordinates
-      // ─────────────────────────────────────────────
-
-      vec2 p =
-        (
-          gl_FragCoord.xy -
-          0.5 * iResolution.xy
-        )
-        /
-        iResolution.y;
+      C =
+        (C - center)
+        / uScale
+        + center;
 
 
-      // ─────────────────────────────────────────────
-      // Mouse interaction
-      // ─────────────────────────────────────────────
-
-      vec2 mouse =
-        (
-          iMouse -
-          0.5 * iResolution.xy
-        )
-        /
-        iResolution.y;
+      vec2 mouseOffset =
+        (uMouse - center)
+        * 0.0002;
 
 
-      p +=
-        (
-          mouse -
-          p
-        )
+      C +=
+        mouseOffset
         *
-        0.035;
-
-
-      // ─────────────────────────────────────────────
-      // Time
-      // ─────────────────────────────────────────────
-
-      float t =
-        iTime *
-        0.6;
-
-
-      // ─────────────────────────────────────────────
-// Plasma
-// ─────────────────────────────────────────────
-
-float v =
-  0.0;
-
-
-v +=
-  sin(
-    p.x * 5.0 +
-    sin(
-      p.y * 3.5 +
-      t
-    )
-  );
-
-
-v +=
-  sin(
-    p.y * 6.0 +
-    cos(
-      p.x * 3.0 -
-      t * 1.2
-    )
-  );
-
-
-v +=
-  sin(
-    (
-      p.x +
-      p.y
-    )
-    *
-    6.5 +
-    t
-  );
-
-
-v +=
-  sin(
-    length(p) * 12.0 -
-    t * 1.5
-  );
-
-
-v *=
-  0.25;
-
-
-// ─────────────────────────────────────────────
-// Normalize
-// ─────────────────────────────────────────────
-
-v =
-  v *
-  0.5 +
-  0.5;
-
-
-// ─────────────────────────────────────────────
-// Contrast
-// ─────────────────────────────────────────────
-
-v =
-  smoothstep(
-    0.46,
-    0.54,
-    v
-  );
-
-
-      // ─────────────────────────────────────────────
-      // Colors
-      // ─────────────────────────────────────────────
-
-      vec3 dark =
-        vec3(
-          0.1059,
-          0.0902,
-          0.0706
+        length(C - center)
+        *
+        step(
+          0.5,
+          uMouseInteractive
         );
 
 
-      vec3 red =
-      vec3(
-          0.8784,
-          0.6471,
-          0.1490
-        );
+      float i;
+      float d;
+      float z;
+
+      float T =
+        iTime * uSpeed;
 
 
-      vec3 gold =
-        vec3(
-          0.88,
-          0.42,
-          0.04
-        );
+      vec3 O =
+        vec3(0.0);
+
+      vec3 p;
+      vec3 S;
+
+      vec2 Q;
 
 
-      vec3 color =
-        mix(
-          dark,
-          red,
-          v
-        );
+      /*
+       * Maximum loop remains 60 so the shader stays
+       * compatible with the original algorithm.
+       *
+       * uQuality controls the actual number of
+       * iterations performed.
+       */
+      for (
+        float stepIndex = 0.0;
+        stepIndex < 60.0;
+        stepIndex += 1.0
+      ) {
+
+        i = stepIndex;
 
 
-      color =
-        mix(
-          color,
-          gold,
-          pow(
-            v,
-            3.0
+        if (i >= uQuality) {
+          break;
+        }
+
+
+        p =
+          z *
+          normalize(
+            vec3(
+              C -
+              0.5 *
+              iResolution.xy,
+
+              iResolution.y
+            )
+          );
+
+
+        p.z -= 4.0;
+
+        S = p;
+
+        d =
+          p.y -
+          T;
+
+
+        p.x +=
+          0.4 *
+          (1.0 + p.y)
+          *
+          sin(
+            d +
+            p.x *
+            0.1
           )
           *
-          0.25
+          cos(
+            0.34 *
+            d +
+            p.x *
+            0.05
+          );
+
+
+        Q =
+          p.xz *=
+          mat2(
+            cos(
+              p.y +
+              vec4(
+                0.0,
+                11.0,
+                33.0,
+                0.0
+              ) -
+              T
+            )
+          );
+
+
+        z +=
+          d =
+            (
+              abs(
+                sqrt(
+                  dot(
+                    Q,
+                    Q
+                  )
+                )
+                -
+                0.25 *
+                (
+                  5.0 +
+                  S.y
+                )
+              )
+              /
+              3.0
+              +
+              8.0e-4
+            )
+            *
+            uStepScale;
+
+
+        o =
+          1.0 +
+          sin(
+            S.y
+            +
+            p.z *
+            0.5
+            +
+            S.z
+            -
+            length(
+              S - p
+            )
+            +
+            vec4(
+              2.0,
+              1.0,
+              0.0,
+              8.0
+            )
+          );
+
+
+        O +=
+          o.w /
+          d *
+          o.xyz;
+
+      }
+
+
+      o.xyz =
+        tanh(
+          O /
+          1.0e4
+        );
+
+    }
+
+
+    bool finite1(float x) {
+
+      return !(
+        isnan(x) ||
+        isinf(x)
+      );
+
+    }
+
+
+    vec3 sanitize(vec3 c) {
+
+      return vec3(
+
+        finite1(c.r)
+          ? c.r
+          : 0.0,
+
+        finite1(c.g)
+          ? c.g
+          : 0.0,
+
+        finite1(c.b)
+          ? c.b
+          : 0.0
+
+      );
+
+    }
+
+
+    void main() {
+
+      vec4 o =
+        vec4(0.0);
+
+
+      mainImage(
+        o,
+        gl_FragCoord.xy
+      );
+
+
+      vec3 rgb =
+        sanitize(
+          o.rgb
         );
 
 
-      // ─────────────────────────────────────────────
-      // Vignette
-      // ─────────────────────────────────────────────
-
-      float vignette =
-        1.0 -
-        smoothstep(
-          0.35,
-          0.85,
-          length(p)
-        );
+      float intensity =
+        (
+          rgb.r +
+          rgb.g +
+          rgb.b
+        )
+        /
+        3.0;
 
 
-      color *=
-        0.65 +
-        vignette *
-        0.35;
+      vec3 customColor =
+        intensity *
+        uCustomColor;
 
 
-      // ─────────────────────────────────────────────
-      // Output
-      // ─────────────────────────────────────────────
+      float alpha =
+        length(rgb) *
+        uOpacity;
+
 
       fragColor =
         vec4(
-          color,
-          1.0
+          customColor,
+          alpha
         );
 
     }
@@ -459,11 +513,53 @@ v =
   `;
 
 
-  // ══════════════════════════════════════════════════════════
-  // SHADER COMPILATION
-  // ══════════════════════════════════════════════════════════
+  // ── Canvas
+  const canvas =
+    document.createElement(
+      'canvas'
+    );
 
-  function createShader(
+  canvas.className =
+    'plasma-canvas';
+
+  canvas.setAttribute(
+    'aria-hidden',
+    'true'
+  );
+
+  container.appendChild(
+    canvas
+  );
+
+
+  // ── WebGL2 context
+  const gl =
+    canvas.getContext(
+      'webgl2',
+      {
+        alpha: true,
+        antialias: false,
+        depth: false,
+        stencil: false,
+        premultipliedAlpha: true,
+        powerPreference: 'high-performance'
+      }
+    );
+
+
+  if (!gl) {
+
+    container.classList.add(
+      'plasma-fallback'
+    );
+
+    return;
+
+  }
+
+
+  // ── Shader compiler
+  function compileShader(
     type,
     source
   ) {
@@ -504,24 +600,26 @@ v =
 
 
       return null;
+
     }
 
 
     return shader;
+
   }
 
 
   const vertexShader =
-    createShader(
+    compileShader(
       gl.VERTEX_SHADER,
-      vertexShaderSource
+      vertexSource
     );
 
 
   const fragmentShader =
-    createShader(
+    compileShader(
       gl.FRAGMENT_SHADER,
-      fragmentShaderSource
+      fragmentSource
     );
 
 
@@ -530,16 +628,16 @@ v =
     !fragmentShader
   ) {
 
-    canvas.remove();
+    container.classList.add(
+      'plasma-fallback'
+    );
 
     return;
+
   }
 
 
-  // ══════════════════════════════════════════════════════════
-  // PROGRAM
-  // ══════════════════════════════════════════════════════════
-
+  // ── Program
   const program =
     gl.createProgram();
 
@@ -576,9 +674,12 @@ v =
     );
 
 
-    canvas.remove();
+    container.classList.add(
+      'plasma-fallback'
+    );
 
     return;
+
   }
 
 
@@ -587,16 +688,22 @@ v =
   );
 
 
-  // ══════════════════════════════════════════════════════════
-  // FULLSCREEN TRIANGLE
-  // ══════════════════════════════════════════════════════════
-
+  // ── Fullscreen triangle pair
   const vertices =
     new Float32Array([
 
-      -1, -1,
-       3, -1,
-      -1,  3
+      -1, -1, 0, 0,
+
+       1, -1, 1, 0,
+
+      -1,  1, 0, 1,
+
+
+      -1,  1, 0, 1,
+
+       1, -1, 1, 0,
+
+       1,  1, 1, 1
 
     ]);
 
@@ -618,246 +725,715 @@ v =
   );
 
 
-  const position =
+  const positionLocation =
     gl.getAttribLocation(
       program,
       'position'
     );
 
 
+  const uvLocation =
+    gl.getAttribLocation(
+      program,
+      'uv'
+    );
+
+
   gl.enableVertexAttribArray(
-    position
+    positionLocation
   );
 
 
   gl.vertexAttribPointer(
-    position,
+    positionLocation,
     2,
     gl.FLOAT,
     false,
-    0,
+    16,
     0
   );
 
 
-  // ══════════════════════════════════════════════════════════
-  // UNIFORMS
-  // ══════════════════════════════════════════════════════════
-
-  const resolution =
-    gl.getUniformLocation(
-      program,
-      'iResolution'
-    );
+  gl.enableVertexAttribArray(
+    uvLocation
+  );
 
 
-  const time =
-    gl.getUniformLocation(
-      program,
-      'iTime'
-    );
+  gl.vertexAttribPointer(
+    uvLocation,
+    2,
+    gl.FLOAT,
+    false,
+    16,
+    8
+  );
 
 
-  const mouse =
-    gl.getUniformLocation(
-      program,
-      'iMouse'
-    );
+  // ── Uniform locations
+  const uniforms = {
+
+    resolution:
+      gl.getUniformLocation(
+        program,
+        'iResolution'
+      ),
+
+    time:
+      gl.getUniformLocation(
+        program,
+        'iTime'
+      ),
+
+    customColor:
+      gl.getUniformLocation(
+        program,
+        'uCustomColor'
+      ),
+
+    speed:
+      gl.getUniformLocation(
+        program,
+        'uSpeed'
+      ),
+
+    scale:
+      gl.getUniformLocation(
+        program,
+        'uScale'
+      ),
+
+    opacity:
+      gl.getUniformLocation(
+        program,
+        'uOpacity'
+      ),
+
+    mouse:
+      gl.getUniformLocation(
+        program,
+        'uMouse'
+      ),
+
+    mouseInteractive:
+      gl.getUniformLocation(
+        program,
+        'uMouseInteractive'
+      ),
+
+    quality:
+      gl.getUniformLocation(
+        program,
+        'uQuality'
+      ),
+
+    stepScale:
+      gl.getUniformLocation(
+        program,
+        'uStepScale'
+      )
+
+  };
 
 
-  // ══════════════════════════════════════════════════════════
-  // MOUSE
-  // ══════════════════════════════════════════════════════════
+  // ── Static uniforms
+  const customColor =
+    hexToRgb(color);
+
+
+  gl.uniform3fv(
+    uniforms.customColor,
+    customColor
+  );
+
+
+  gl.uniform1f(
+    uniforms.speed,
+    speed * 0.4
+  );
+
+
+  gl.uniform1f(
+    uniforms.scale,
+    scale
+  );
+
+
+  gl.uniform1f(
+    uniforms.opacity,
+    opacity
+  );
+
+
+  gl.uniform1f(
+    uniforms.mouseInteractive,
+    mouseInteractive
+      ? 1.0
+      : 0.0
+  );
+
+
+  gl.uniform1f(
+    uniforms.quality,
+    iterations
+  );
+
+
+  /*
+   * Compensates for the reduced iteration count
+   * so the plasma does not become visually compressed.
+   */
+  gl.uniform1f(
+    uniforms.stepScale,
+    60 / iterations
+  );
+
+
+  // ── Mouse state
+  let targetMouseX = 0;
+  let targetMouseY = 0;
 
   let mouseX = 0;
-
   let mouseY = 0;
 
 
-  hero.addEventListener(
-    'mousemove',
+  let hasMousePosition =
+    false;
+
+
+  const handleMouseMove =
     (e) => {
 
+      if (!mouseInteractive) {
+        return;
+      }
+
+
       const rect =
-        hero.getBoundingClientRect();
+        container.getBoundingClientRect();
 
 
-      mouseX =
-        e.clientX -
-        rect.left;
+      targetMouseX =
+        (
+          e.clientX -
+          rect.left
+        );
 
 
-      mouseY =
+      targetMouseY =
         rect.height -
         (
           e.clientY -
           rect.top
         );
 
-    },
+
+      hasMousePosition =
+        true;
+
+    };
+
+
+  container.addEventListener(
+    'pointermove',
+    handleMouseMove,
     {
       passive: true
     }
   );
 
 
-  // ══════════════════════════════════════════════════════════
-  // RESIZE
-  // ══════════════════════════════════════════════════════════
-
-  function resize() {
-
-    const rect =
-      hero.getBoundingClientRect();
+  // ── Render state
+  let resizePending =
+    false;
 
 
-    const dpr =
-      Math.min(
-        window.devicePixelRatio || 1,
-        MAX_DPR
-      );
+  let animationFrame =
+    0;
 
 
-    canvas.width =
-      Math.max(
-        1,
-        Math.floor(
-          rect.width *
-          dpr *
-          RENDER_SCALE
-        )
-      );
+  let isVisible =
+    true;
 
 
-    canvas.height =
-      Math.max(
-        1,
-        Math.floor(
-          rect.height *
-          dpr *
-          RENDER_SCALE
-        )
-      );
+  let tabVisible =
+    document.visibilityState !==
+    'hidden';
 
 
-    gl.viewport(
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
+  let contextLost =
+    false;
 
 
-    gl.uniform2f(
-      resolution,
-      canvas.width,
-      canvas.height
-    );
-
-  }
+  let lastFrameTime =
+    0;
 
 
-  window.addEventListener(
-    'resize',
-    resize
-  );
+  let lastRenderWidth =
+    0;
 
 
-  resize();
+  let lastRenderHeight =
+    0;
 
 
-  // ══════════════════════════════════════════════════════════
-  // ANIMATION
-  // ══════════════════════════════════════════════════════════
-
-  let animationFrame = 0;
-
-  let lastFrameTime = 0;
-
-
-  const frameInterval =
-    1000 /
-    TARGET_FPS;
+  let lastTimestamp =
+    performance.now();
 
 
   const startTime =
     performance.now();
 
 
-  function animate(now) {
+  /*
+   * We intentionally render at 60 FPS.
+   * The optimization happens inside the shader
+   * and through reduced render resolution.
+   */
+  const targetFrameInterval =
+    1000 / 60;
 
-    const delta =
-      now -
-      lastFrameTime;
+
+  // ── Resize
+  function setSize() {
+
+    const rect =
+      container.getBoundingClientRect();
 
 
+    const dpr =
+      Math.min(
+        window.devicePixelRatio || 1,
+        maxDpr
+      );
+
+
+    const width =
+      Math.max(
+        1,
+        Math.floor(
+          rect.width *
+          dpr *
+          renderScale
+        )
+      );
+
+
+    const height =
+      Math.max(
+        1,
+        Math.floor(
+          rect.height *
+          dpr *
+          renderScale
+        )
+      );
+
+
+    /*
+     * Avoid reallocating the WebGL framebuffer
+     * when the dimensions have not actually changed.
+     */
     if (
-      delta >=
-      frameInterval
+      width === lastRenderWidth &&
+      height === lastRenderHeight
     ) {
 
-      lastFrameTime =
-        now -
-        (
-          delta %
-          frameInterval
-        );
-
-
-      const elapsed =
-        (
-          now -
-          startTime
-        )
-        /
-        1000;
-
-
-      gl.uniform1f(
-        time,
-        elapsed
-      );
-
-
-      gl.uniform2f(
-        mouse,
-        mouseX,
-        mouseY
-      );
-
-
-      gl.drawArrays(
-        gl.TRIANGLES,
-        0,
-        3
-      );
+      return;
 
     }
 
 
+    lastRenderWidth =
+      width;
+
+    lastRenderHeight =
+      height;
+
+
+    canvas.width =
+      width;
+
+    canvas.height =
+      height;
+
+
+    canvas.style.width =
+      '100%';
+
+    canvas.style.height =
+      '100%';
+
+
+    gl.viewport(
+      0,
+      0,
+      width,
+      height
+    );
+
+
+    gl.uniform2f(
+      uniforms.resolution,
+      width,
+      height
+    );
+
+
+    if (
+      !hasMousePosition
+    ) {
+
+      mouseX =
+        width *
+        0.5;
+
+      mouseY =
+        height *
+        0.5;
+
+
+      targetMouseX =
+        mouseX;
+
+      targetMouseY =
+        mouseY;
+
+    }
+
+  }
+
+
+  // ── Render loop
+  function drawFrame(
+    timestamp
+  ) {
+
+    if (
+      contextLost ||
+      !isVisible ||
+      !tabVisible
+    ) {
+
+      return;
+
+    }
+
+
+    const elapsed =
+      timestamp -
+      lastFrameTime;
+
+
+    if (
+      elapsed <
+      targetFrameInterval
+    ) {
+
+      animationFrame =
+        requestAnimationFrame(
+          drawFrame
+        );
+
+      return;
+
+    }
+
+
+    lastFrameTime =
+      timestamp;
+
+
+    /*
+     * Frame-rate independent mouse smoothing.
+     *
+     * Instead of:
+     *
+     * mouse = target
+     *
+     * we gradually approach the target.
+     *
+     * This removes the visible stepping caused
+     * by mousemove events arriving irregularly.
+     */
+    const deltaSeconds =
+      Math.min(
+        (
+          timestamp -
+          lastTimestamp
+        ) / 1000,
+        0.05
+      );
+
+
+    lastTimestamp =
+      timestamp;
+
+
+    const smoothing =
+      1 -
+      Math.exp(
+        -mouseSmoothness *
+        deltaSeconds
+      );
+
+
+    mouseX +=
+      (
+        targetMouseX -
+        mouseX
+      ) *
+      smoothing;
+
+
+    mouseY +=
+      (
+        targetMouseY -
+        mouseY
+      ) *
+      smoothing;
+
+
+    gl.uniform2f(
+      uniforms.mouse,
+      mouseX *
+      renderScale *
+      (
+        window.devicePixelRatio || 1
+      ),
+
+      mouseY *
+      renderScale *
+      (
+        window.devicePixelRatio || 1
+      )
+    );
+
+
+    gl.uniform1f(
+      uniforms.time,
+      (
+        timestamp -
+        startTime
+      ) *
+      0.001
+    );
+
+
+    gl.clearColor(
+      0,
+      0,
+      0,
+      0
+    );
+
+
+    gl.clear(
+      gl.COLOR_BUFFER_BIT
+    );
+
+
+    gl.drawArrays(
+      gl.TRIANGLES,
+      0,
+      6
+    );
+
+
     animationFrame =
       requestAnimationFrame(
-        animate
+        drawFrame
       );
 
   }
 
 
-  animationFrame =
-    requestAnimationFrame(
-      animate
+  // ── Static frame
+  function renderStaticFrame() {
+
+    gl.uniform1f(
+      uniforms.time,
+      0
     );
 
 
-  // ══════════════════════════════════════════════════════════
-  // WEBGL CONTEXT
-  // ══════════════════════════════════════════════════════════
+    gl.clearColor(
+      0,
+      0,
+      0,
+      0
+    );
 
+
+    gl.clear(
+      gl.COLOR_BUFFER_BIT
+    );
+
+
+    gl.drawArrays(
+      gl.TRIANGLES,
+      0,
+      6
+    );
+
+  }
+
+
+  // ── Resize handler
+  const handleResize =
+    () => {
+
+      if (resizePending) {
+        return;
+      }
+
+
+      resizePending =
+        true;
+
+
+      requestAnimationFrame(
+        () => {
+
+          resizePending =
+            false;
+
+          setSize();
+
+        }
+      );
+
+    };
+
+
+  const resizeObserver =
+    new ResizeObserver(
+      handleResize
+    );
+
+
+  resizeObserver.observe(
+    container
+  );
+
+
+  setSize();
+
+
+  // ── Visibility observer
+  const visibilityObserver =
+    new IntersectionObserver(
+      ([entry]) => {
+
+        const wasVisible =
+          isVisible;
+
+
+        isVisible =
+          entry.isIntersecting;
+
+
+        if (
+          isVisible &&
+          !wasVisible &&
+          !contextLost &&
+          tabVisible &&
+          !prefersReducedMotion
+        ) {
+
+          cancelAnimationFrame(
+            animationFrame
+          );
+
+
+          lastFrameTime =
+            performance.now();
+
+
+          lastTimestamp =
+            performance.now();
+
+
+          animationFrame =
+            requestAnimationFrame(
+              drawFrame
+            );
+
+        }
+
+      },
+      {
+        threshold: 0
+      }
+    );
+
+
+  visibilityObserver.observe(
+    container
+  );
+
+
+  // ── Browser tab visibility
+  const handleVisibilityChange =
+    () => {
+
+      tabVisible =
+        document.visibilityState !==
+        'hidden';
+
+
+      if (
+        tabVisible &&
+        isVisible &&
+        !contextLost &&
+        !prefersReducedMotion
+      ) {
+
+        cancelAnimationFrame(
+          animationFrame
+        );
+
+
+        lastFrameTime =
+          performance.now();
+
+
+        lastTimestamp =
+          performance.now();
+
+
+        animationFrame =
+          requestAnimationFrame(
+            drawFrame
+          );
+
+      } else {
+
+        cancelAnimationFrame(
+          animationFrame
+        );
+
+      }
+
+    };
+
+
+  document.addEventListener(
+    'visibilitychange',
+    handleVisibilityChange
+  );
+
+
+  // ── WebGL context lost
   canvas.addEventListener(
     'webglcontextlost',
     (e) => {
 
       e.preventDefault();
+
+
+      contextLost =
+        true;
+
 
       cancelAnimationFrame(
         animationFrame
@@ -867,18 +1443,63 @@ v =
   );
 
 
+  // ── WebGL context restored
   canvas.addEventListener(
     'webglcontextrestored',
     () => {
 
-      animationFrame =
-        requestAnimationFrame(
-          animate
+      contextLost =
+        false;
+
+
+      setSize();
+
+
+      if (
+        isVisible &&
+        tabVisible &&
+        !prefersReducedMotion
+      ) {
+
+        cancelAnimationFrame(
+          animationFrame
         );
+
+
+        lastFrameTime =
+          performance.now();
+
+
+        lastTimestamp =
+          performance.now();
+
+
+        animationFrame =
+          requestAnimationFrame(
+            drawFrame
+          );
+
+      }
 
     }
   );
 
+
+  // ── Start
+  if (
+    prefersReducedMotion
+  ) {
+
+    renderStaticFrame();
+
+  } else {
+
+    animationFrame =
+      requestAnimationFrame(
+        drawFrame
+      );
+
+  }
 
 })();
 
@@ -1432,5 +2053,480 @@ if (contactForm) {
 
 
   animate();
+
+})();
+
+
+// ══════════════════════════════════════════════════════════════
+// MAGIC BENTO — ACHIEVEMENTS
+// ══════════════════════════════════════════════════════════════
+
+(function initMagicBentoAchievements() {
+
+  const cards =
+    document.querySelectorAll(
+      '.magic-bento-card'
+    );
+
+
+  if (!cards.length) {
+    return;
+  }
+
+
+  const reducedMotion =
+    window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+
+
+  const mobile =
+    window.matchMedia(
+      '(max-width: 768px)'
+    ).matches;
+
+
+  if (
+    reducedMotion ||
+    mobile
+  ) {
+    return;
+  }
+
+
+  cards.forEach(
+    (card) => {
+
+      const particles = [];
+
+      const particleAnimations = [];
+
+      const particleCount = 8;
+
+      let hovering = false;
+
+
+      const stopParticles =
+        () => {
+
+          particleAnimations.forEach(
+            (animation) => {
+              animation.cancel();
+            }
+          );
+
+
+          particleAnimations.length =
+            0;
+
+
+          particles.forEach(
+            (particle) => {
+
+              particle.style.opacity =
+                '0';
+
+
+              particle.style.transform =
+                'scale(0)';
+
+            }
+          );
+
+        };
+
+
+      const createParticles =
+        () => {
+
+          if (particles.length) {
+            return;
+          }
+
+
+          for (
+            let i = 0;
+            i < particleCount;
+            i += 1
+          ) {
+
+            const particle =
+              document.createElement(
+                'span'
+              );
+
+
+            particle.className =
+              'magic-bento-particle';
+
+
+            particle.style.left =
+              `${Math.random() * 100}%`;
+
+
+            particle.style.top =
+              `${Math.random() * 100}%`;
+
+
+            particle.style.opacity =
+              '0';
+
+
+            particle.style.transform =
+              'scale(0)';
+
+
+            card.appendChild(
+              particle
+            );
+
+
+            particles.push(
+              particle
+            );
+
+          }
+
+        };
+
+
+      const startParticles =
+        () => {
+
+          createParticles();
+
+          stopParticles();
+
+
+          particles.forEach(
+            (
+              particle,
+              index
+            ) => {
+
+              const angle =
+                Math.random() *
+                Math.PI *
+                2;
+
+
+              const distance =
+                35 +
+                Math.random() *
+                45;
+
+
+              const x =
+                Math.cos(angle) *
+                distance;
+
+
+              const y =
+                Math.sin(angle) *
+                distance;
+
+
+              const duration =
+                1300 +
+                Math.random() *
+                1000;
+
+
+              const animation =
+                particle.animate(
+                  [
+
+                    {
+                      opacity: 0,
+                      transform:
+                        'translate(0, 0) scale(0)'
+                    },
+
+                    {
+                      opacity: 0.85,
+                      transform:
+                        `translate(${x}px, ${y}px) scale(1)`
+                    },
+
+                    {
+                      opacity: 0,
+                      transform:
+                        `translate(${x * 0.35}px, ${y * 0.35}px) scale(0)`
+                    }
+
+                  ],
+                  {
+
+                    duration,
+
+                    delay:
+                      index * 70,
+
+                    easing:
+                      'ease-in-out',
+
+                    iterations:
+                      Infinity
+
+                  }
+                );
+
+
+              particleAnimations.push(
+                animation
+              );
+
+            }
+          );
+
+        };
+
+
+      const resetCard =
+        () => {
+
+          card.style.transform =
+            'translate3d(0, 0, 0) rotateX(0deg) rotateY(0deg)';
+
+
+          card.style.setProperty(
+            '--glow-intensity',
+            '0'
+          );
+
+
+          stopParticles();
+
+        };
+
+
+      card.addEventListener(
+        'mouseenter',
+        () => {
+
+          hovering =
+            true;
+
+
+          startParticles();
+
+
+          card.style.setProperty(
+            '--glow-intensity',
+            '1'
+          );
+
+        }
+      );
+
+
+      card.addEventListener(
+        'mouseleave',
+        () => {
+
+          hovering =
+            false;
+
+
+          resetCard();
+
+        }
+      );
+
+
+      card.addEventListener(
+        'mousemove',
+        (event) => {
+
+          if (!hovering) {
+            return;
+          }
+
+
+          const rect =
+            card.getBoundingClientRect();
+
+
+          const x =
+            event.clientX -
+            rect.left;
+
+
+          const y =
+            event.clientY -
+            rect.top;
+
+
+          const centerX =
+            rect.width /
+            2;
+
+
+          const centerY =
+            rect.height /
+            2;
+
+
+          card.style.setProperty(
+            '--glow-x',
+            `${(x / rect.width) * 100}%`
+          );
+
+
+          card.style.setProperty(
+            '--glow-y',
+            `${(y / rect.height) * 100}%`
+          );
+
+
+          card.style.setProperty(
+            '--glow-intensity',
+            '1'
+          );
+
+
+          const rotateX =
+            (
+              (y - centerY) /
+              centerY
+            ) *
+            -6;
+
+
+          const rotateY =
+            (
+              (x - centerX) /
+              centerX
+            ) *
+            6;
+
+
+          const translateX =
+            (
+              x - centerX
+            ) *
+            0.018;
+
+
+          const translateY =
+            (
+              y - centerY
+            ) *
+            0.018;
+
+
+          card.style.transform =
+            `
+              perspective(1000px)
+              translate3d(
+                ${translateX}px,
+                ${translateY}px,
+                0
+              )
+              rotateX(${rotateX}deg)
+              rotateY(${rotateY}deg)
+            `;
+
+        }
+      );
+
+
+      card.addEventListener(
+        'click',
+        (event) => {
+
+          const rect =
+            card.getBoundingClientRect();
+
+
+          const x =
+            event.clientX -
+            rect.left;
+
+
+          const y =
+            event.clientY -
+            rect.top;
+
+
+          const size =
+            Math.max(
+              rect.width,
+              rect.height
+            ) *
+            1.5;
+
+
+          const ripple =
+            document.createElement(
+              'span'
+            );
+
+
+          ripple.className =
+            'magic-bento-ripple';
+
+
+          ripple.style.width =
+            `${size}px`;
+
+
+          ripple.style.height =
+            `${size}px`;
+
+
+          ripple.style.left =
+            `${x - size / 2}px`;
+
+
+          ripple.style.top =
+            `${y - size / 2}px`;
+
+
+          card.appendChild(
+            ripple
+          );
+
+
+          const animation =
+            ripple.animate(
+              [
+
+                {
+                  transform:
+                    'scale(0)',
+                  opacity: 1
+                },
+
+                {
+                  transform:
+                    'scale(1)',
+                  opacity: 0
+                }
+
+              ],
+              {
+
+                duration: 700,
+
+                easing:
+                  'ease-out'
+
+              }
+            );
+
+
+          animation.onfinish =
+            () => {
+
+              ripple.remove();
+
+            };
+
+        }
+      );
+
+    }
+  );
 
 })();
