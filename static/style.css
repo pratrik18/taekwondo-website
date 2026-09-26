@@ -104,7 +104,7 @@ body::after {
 
 .section-eyebrow {
   display: inline-block;
-  font-family: 'Rye', cursive;
+  font-family: 'Rye';
   font-size: 14px;
   font-weight: 400;
   letter-spacing: 2px;
