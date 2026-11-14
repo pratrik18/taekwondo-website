@@ -3,13 +3,13 @@
   // ── Page loader
   const loader = document.getElementById('page-loader');
 
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      if (loader) {
+  if (loader) {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
         loader.classList.add('hidden');
-      }
-    }, 850);
-  });
+      });
+    });
+  }
 
 
   // ── Hero spotlight
@@ -128,6 +128,9 @@
     document.getElementById('hero-plasma');
 
   if (!container) return;
+
+
+  const initializePlasma = () => {
 
 
   // ── Performance settings
@@ -1503,6 +1506,23 @@
       );
 
   }
+
+  };
+
+
+  // Let the browser paint the page before compiling the WebGL shaders.
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(
+          initializePlasma,
+          { timeout: 1500 }
+        );
+      } else {
+        window.setTimeout(initializePlasma, 0);
+      }
+    });
+  });
 
 })();
 

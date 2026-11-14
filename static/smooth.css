@@ -8,12 +8,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.6s ease, visibility 0.6s ease;
+  transition: opacity 0.2s ease, visibility 0s linear 0.2s;
 }
 
 #page-loader.hidden {
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;
 }
 
 .loader-bar {
