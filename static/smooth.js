@@ -14,38 +14,41 @@
 
   // ── Hero spotlight
   const spotlight = document.querySelector('.global-spotlight');
+  let spotlightFrame = 0;
+  let spotlightPosition = null;
 
-  document.addEventListener('mousemove', (e) => {
+  document.addEventListener('pointermove', (e) => {
 
     if (!spotlight) return;
 
-    const x =
-      (e.clientX / window.innerWidth * 100)
-        .toFixed(1);
+    spotlightPosition = { x: e.clientX, y: e.clientY };
+    if (spotlightFrame) return;
 
-    const y =
-      (e.clientY / window.innerHeight * 100)
-        .toFixed(1);
+    spotlightFrame = requestAnimationFrame(() => {
+      spotlightFrame = 0;
+      if (!spotlightPosition) return;
 
-    spotlight.style.setProperty(
-      '--mx',
-      x + '%'
-    );
+      spotlight.style.setProperty(
+        '--mx',
+        (spotlightPosition.x / window.innerWidth * 100).toFixed(1) + '%'
+      );
+      spotlight.style.setProperty(
+        '--my',
+        (spotlightPosition.y / window.innerHeight * 100).toFixed(1) + '%'
+      );
+      spotlight.style.opacity = '1';
+    });
 
-    spotlight.style.setProperty(
-      '--my',
-      y + '%'
-    );
-
-    spotlight.style.opacity = '1';
-
-  });
+  }, { passive: true });
 
 
   document.addEventListener('mouseleave', () => {
 
     if (!spotlight) return;
 
+    spotlightPosition = null;
+    cancelAnimationFrame(spotlightFrame);
+    spotlightFrame = 0;
     spotlight.style.opacity = '0';
 
   });
@@ -1936,6 +1939,16 @@ if (contactForm) {
 
   let targetAngle = 0;
 
+  let animationFrame = 0;
+
+  let isVisible = false;
+
+  let tabVisible = document.visibilityState !== 'hidden';
+
+  const prefersReducedMotion = window.matchMedia(
+    '(prefers-reduced-motion: reduce)'
+  ).matches;
+
 
   const stiffness =
     0.06;
@@ -1953,8 +1966,29 @@ if (contactForm) {
     260;
 
 
+  const scheduleAnimation = () => {
+
+    if (
+      animationFrame ||
+      !isVisible ||
+      !tabVisible ||
+      prefersReducedMotion ||
+      (
+        Math.abs(targetAngle - angle) < 0.025 &&
+        Math.abs(angularVel) < 0.025
+      )
+    ) {
+      return;
+    }
+
+    bag.style.willChange = 'transform';
+    animationFrame = requestAnimationFrame(animate);
+
+  };
+
+
   hero.addEventListener(
-    'mousemove',
+    'pointermove',
     (e) => {
 
       const rect =
@@ -2007,7 +2041,10 @@ if (contactForm) {
 
       }
 
-    }
+      scheduleAnimation();
+
+    },
+    { passive: true }
   );
 
 
@@ -2018,11 +2055,24 @@ if (contactForm) {
       targetAngle =
         0;
 
+      scheduleAnimation();
+
     }
   );
 
 
   function animate() {
+
+    animationFrame = 0;
+
+    if (
+      !isVisible ||
+      !tabVisible ||
+      prefersReducedMotion
+    ) {
+      bag.style.willChange = '';
+      return;
+    }
 
     angularVel +=
       (
@@ -2045,14 +2095,56 @@ if (contactForm) {
       `rotate(${angle}deg)`;
 
 
-    requestAnimationFrame(
-      animate
-    );
+    if (
+      Math.abs(targetAngle - angle) < 0.025 &&
+      Math.abs(angularVel) < 0.025
+    ) {
+      angle = targetAngle;
+      angularVel = 0;
+      bag.style.transform = `rotate(${angle}deg)`;
+      bag.style.willChange = '';
+      return;
+    }
+
+    animationFrame = requestAnimationFrame(animate);
 
   }
 
 
-  animate();
+  const visibilityObserver = new IntersectionObserver(
+    ([entry]) => {
+      isVisible = entry.isIntersecting;
+      hero.classList.toggle('is-offscreen', !isVisible);
+
+      if (isVisible) {
+        scheduleAnimation();
+      } else {
+        cancelAnimationFrame(animationFrame);
+        animationFrame = 0;
+        bag.style.willChange = '';
+      }
+    },
+    { threshold: 0 }
+  );
+
+  visibilityObserver.observe(hero);
+
+  document.addEventListener('visibilitychange', () => {
+    tabVisible = document.visibilityState !== 'hidden';
+
+    if (tabVisible) {
+      scheduleAnimation();
+    } else {
+      cancelAnimationFrame(animationFrame);
+      animationFrame = 0;
+      bag.style.willChange = '';
+    }
+  });
+
+  window.addEventListener('blur', () => {
+    targetAngle = 0;
+    scheduleAnimation();
+  });
 
 })();
 
@@ -2072,6 +2164,22 @@ if (contactForm) {
   if (!cards.length) {
     return;
   }
+
+
+  const cardVisibilityObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        entry.target.classList.toggle(
+          'is-offscreen',
+          !entry.isIntersecting
+        );
+      });
+    },
+    { rootMargin: '80px 0px' }
+  );
+
+
+  cards.forEach((card) => cardVisibilityObserver.observe(card));
 
 
   const reducedMotion =
@@ -2285,6 +2393,8 @@ if (contactForm) {
       const resetCard =
         () => {
 
+          card.style.willChange = '';
+
           card.style.transform =
             'translate3d(0, 0, 0) rotateX(0deg) rotateY(0deg)';
 
@@ -2306,6 +2416,8 @@ if (contactForm) {
 
           hovering =
             true;
+
+          card.style.willChange = 'transform';
 
 
           startParticles();
