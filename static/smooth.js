@@ -139,6 +139,10 @@
       '(prefers-reduced-motion: reduce)'
     ).matches;
 
+  const mobileProfile = window.matchMedia(
+    '(max-width: 768px), (pointer: coarse)'
+  ).matches;
+
 
   const color = '#A32620';
 
@@ -155,21 +159,21 @@
    * Lower render resolution dramatically reduces
    * GPU workload while keeping the visual effect smooth.
    */
-  const renderScale = 0.50;
+  const renderScale = mobileProfile ? 0.32 : 0.50;
 
 
   /*
    * Maximum DPR prevents extremely high-density
    * displays from multiplying GPU workload.
    */
-  const maxDpr = 1.5;
+  const maxDpr = mobileProfile ? 1 : 1.5;
 
 
   /*
    * The original shader used 60 raymarching iterations.
    * 36 gives a much better performance/quality balance.
    */
-  const iterations = 36;
+  const iterations = mobileProfile ? 18 : 36;
 
 
   /*
@@ -565,6 +569,10 @@
 
 
   // ── Shader compiler
+  const parallelCompileExtension =
+    gl.getExtension('KHR_parallel_shader_compile');
+
+
   function compileShader(
     type,
     source
@@ -586,6 +594,7 @@
 
 
     if (
+      !parallelCompileExtension &&
       !gl.getShaderParameter(
         shader,
         gl.COMPILE_STATUS
@@ -665,28 +674,33 @@
   );
 
 
-  if (
-    !gl.getProgramParameter(
+  const initializeProgram = () => {
+
+    const shadersCompiled =
+      gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS) &&
+      gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS);
+
+    const programLinked = gl.getProgramParameter(
       program,
       gl.LINK_STATUS
-    )
-  ) {
-
-    console.error(
-      'Plasma program error:',
-      gl.getProgramInfoLog(
-        program
-      )
     );
 
+    if (!shadersCompiled || !programLinked) {
 
-    container.classList.add(
-      'plasma-fallback'
-    );
+      console.error(
+        'Plasma shader/program error:',
+        gl.getShaderInfoLog(fragmentShader) ||
+          gl.getProgramInfoLog(program)
+      );
 
-    return;
 
-  }
+      container.classList.add(
+        'plasma-fallback'
+      );
+
+      return;
+
+    }
 
 
   gl.useProgram(
@@ -957,6 +971,18 @@
     0;
 
 
+  let frameTimeout =
+    0;
+
+
+  function cancelDraw() {
+    cancelAnimationFrame(animationFrame);
+    clearTimeout(frameTimeout);
+    animationFrame = 0;
+    frameTimeout = 0;
+  }
+
+
   let isVisible =
     true;
 
@@ -996,7 +1022,7 @@
    * and through reduced render resolution.
    */
   const targetFrameInterval =
-    1000 / 60;
+    1000 / (mobileProfile ? 30 : 60);
 
 
   // ── Resize
@@ -1135,10 +1161,10 @@
       targetFrameInterval
     ) {
 
-      animationFrame =
-        requestAnimationFrame(
-          drawFrame
-        );
+      frameTimeout = window.setTimeout(() => {
+        frameTimeout = 0;
+        animationFrame = requestAnimationFrame(drawFrame);
+      }, targetFrameInterval - elapsed);
 
       return;
 
@@ -1204,13 +1230,13 @@
       mouseX *
       renderScale *
       (
-        window.devicePixelRatio || 1
+        Math.min(window.devicePixelRatio || 1, maxDpr)
       ),
 
       mouseY *
       renderScale *
       (
-        window.devicePixelRatio || 1
+        Math.min(window.devicePixelRatio || 1, maxDpr)
       )
     );
 
@@ -1346,9 +1372,7 @@
           !prefersReducedMotion
         ) {
 
-          cancelAnimationFrame(
-            animationFrame
-          );
+          cancelDraw();
 
 
           lastFrameTime =
@@ -1394,9 +1418,7 @@
         !prefersReducedMotion
       ) {
 
-        cancelAnimationFrame(
-          animationFrame
-        );
+        cancelDraw();
 
 
         lastFrameTime =
@@ -1414,9 +1436,7 @@
 
       } else {
 
-        cancelAnimationFrame(
-          animationFrame
-        );
+        cancelDraw();
 
       }
 
@@ -1441,9 +1461,7 @@
         true;
 
 
-      cancelAnimationFrame(
-        animationFrame
-      );
+      cancelDraw();
 
     }
   );
@@ -1467,9 +1485,7 @@
         !prefersReducedMotion
       ) {
 
-        cancelAnimationFrame(
-          animationFrame
-        );
+        cancelDraw();
 
 
         lastFrameTime =
@@ -1505,6 +1521,28 @@
         drawFrame
       );
 
+  }
+
+  };
+
+
+  if (parallelCompileExtension) {
+    const waitForProgram = () => {
+      if (
+        gl.getProgramParameter(
+          program,
+          parallelCompileExtension.COMPLETION_STATUS_KHR
+        )
+      ) {
+        initializeProgram();
+      } else {
+        window.setTimeout(waitForProgram, 50);
+      }
+    };
+
+    waitForProgram();
+  } else {
+    initializeProgram();
   }
 
   };
